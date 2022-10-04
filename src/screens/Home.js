@@ -1,9 +1,27 @@
 import React, {useEffect, useCallback} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {ButtonSmall} from '../components';
 
 export const Home = () => {
-  return <View style={styled.rootContainer}></View>;
+  const navigation = useNavigation();
+  const onPressFaceRecognition = useCallback(() => {
+    navigation.navigate('FaceRecognition');
+  }, []);
+
+  const onPressSpeechRecognition = useCallback(() => {
+    navigation.navigate('MathStackNavigator');
+  }, []);
+  return (
+    <View style={styled.rootContainer}>
+      <ButtonSmall
+        label="졸음 인식"
+        onPress={onPressFaceRecognition}
+        style={{marginBottom: 16}}
+      />
+      <ButtonSmall label="사칙 연산" onPress={onPressSpeechRecognition} />
+    </View>
+  );
 };
 
 const styled = StyleSheet.create({
@@ -11,6 +29,5 @@ const styled = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
   },
 });
