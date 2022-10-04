@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Home, FaceRecognition} from '../screens';
+import {Home, FaceRecognition, Success} from '../screens';
 import {MathStackNavigator} from './MathStackNavigator';
 const Stack = createStackNavigator();
 
@@ -12,6 +12,7 @@ export const RootStackNavigator = () => {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="FaceRecognition" component={FaceRecognition} />
       <Stack.Screen name="MathStackNavigator" component={MathStackNavigator} />
+      <Stack.Screen name="Success" component={Success} />
     </Stack.Navigator>
   );
 };

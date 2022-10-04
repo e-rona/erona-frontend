@@ -5,12 +5,12 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {setCustomText} from 'react-native-global-props';
 import {RootStackNavigator} from './src/navigations/RootStackNavigator';
 
-import {gray800} from './src/themes/colors';
+import {gray900} from './src/themes/colors';
 
 const customTextProps = {
   style: {
     fontFamily: 'Pretendard-Regular',
-    color: gray800,
+    color: gray900,
   },
 };
 
