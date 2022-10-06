@@ -1,6 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Home, FaceRecognition} from '../screens';
+import {Home} from '../screens';
+import FaceRecognition from '../screens/FaceRrecognition';
 import {MathStackNavigator} from './MathStackNavigator';
 const Stack = createStackNavigator();
 
