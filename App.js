@@ -36,11 +36,12 @@ const App = () => {
     Tts.setDefaultLanguage('ko-KR');
 
     // set default voice
-    Tts.setDefaultVoice('com.apple.ttsbundle.Yuna-compact');
+    //rTts.setDefaultVoice('com.apple.ttsbundle.Yuna-compact');
 
     // play audio even the silent switch is set
     Tts.setIgnoreSilentSwitch('ignore');
-    Tts.setDefaultRate(0.4);
+
+    Platform.OS == 'android' && Tts.setDefaultRate(0.4);
   }, []);
 
   return (
