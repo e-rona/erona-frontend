@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Tts from 'react-native-tts';
 
@@ -13,10 +13,11 @@ export const MathInit = () => {
       navigation.navigate('MathPlay');
     });
     Tts.speak('사칙연산 게임을 시작합니다', {
+      rate: 0.5,
       androidParams: {
         KEY_PARAM_PAN: -1,
-        KEY_PARAM_VOLUME: 0.5,
-        KEY_PARAM_STREAM: 'STREAM_MUSIC',
+        KEY_PARAM_VOLUME: 1,
+        KEY_PARAM_STREAM: 'STREAM_NOTIFICATION',
       },
     });
   }, []);

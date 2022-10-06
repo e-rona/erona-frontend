@@ -357,8 +357,6 @@ PODS:
     - React-perflogger (= 0.68.2)
   - RNDeviceInfo (10.2.0):
     - React-Core
-  - RNExitApp (1.1.0):
-    - React
   - RNGestureHandler (2.7.0):
     - React-Core
   - RNScreens (3.17.0):
@@ -429,7 +427,6 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
-  - RNExitApp (from `../node_modules/react-native-exit-app`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - TextToSpeech (from `../node_modules/react-native-tts`)
@@ -520,8 +517,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
-  RNExitApp:
-    :path: "../node_modules/react-native-exit-app"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNScreens:
@@ -578,7 +573,6 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: b960b687d2dfef0d3761fbb187e01812ebab8b23
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   RNDeviceInfo: 8b83e99e290deaf1bab71673cc636776ef647b6f
-  RNExitApp: c4e052df2568b43bec8a37c7cd61194d4cfee2c3
   RNGestureHandler: 7673697e7c0e9391adefae4faa087442bc04af33
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608

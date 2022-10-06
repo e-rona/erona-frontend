@@ -1,8 +1,10 @@
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
+import {Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {setCustomText} from 'react-native-global-props';
+import Tts from 'react-native-tts';
 import {RootStackNavigator} from './src/navigations/RootStackNavigator';
 
 import {gray900} from './src/themes/colors';
@@ -18,6 +20,27 @@ const App = () => {
   useEffect(() => {
     // set default font
     setCustomText(customTextProps);
+
+    // react-native-tts settings
+    // install tts engine if not installed
+    Tts.getInitStatus().then(
+      () => {},
+      err => {
+        if (err.code === 'no_engine') {
+          console.log('here');
+          Tts.requestInstallEngine();
+        }
+      },
+    );
+    // set default language
+    Tts.setDefaultLanguage('ko-KR');
+
+    // set default voice
+    Tts.setDefaultVoice('com.apple.ttsbundle.Yuna-compact');
+
+    // play audio even the silent switch is set
+    Tts.setIgnoreSilentSwitch('ignore');
+    Tts.setDefaultRate(0.4);
   }, []);
 
   return (
