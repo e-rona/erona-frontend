@@ -48,6 +48,8 @@ export default class FaceRecognition extends Component {
     faces: [],
     blinkDetected: false,
     blinkedimage: null,
+    sleepCount: 0,
+    alert: false,
   };
 
   toggleFacing() {
@@ -99,8 +101,12 @@ export default class FaceRecognition extends Component {
   };
 
   facesDetected = ({faces}) => {
-    if (!faces.length) return;
-    console.log('face : ', faces[0].rollAngle, faces[0].yawAngle);
+    if (!faces.length) {
+      console.log('얼굴 감지 불가');
+
+      return;
+    }
+    // console.log('face : ', faces[0].rollAngle, faces[0].yawAngle);
     const rightEye = faces[0].rightEyeOpenProbability;
     const leftEye = faces[0].leftEyeOpenProbability;
     const smileprob = faces[0].smilingProbability;
@@ -113,7 +119,15 @@ export default class FaceRecognition extends Component {
     //     blinkProb: bothEyes,
     //   }),
     // );
-    if (bothEyes <= 0.3) {
+
+    console.log(bothEyes);
+    if (bothEyes < 0.5 && bothEyes >= 0.2) {
+      //졸린상태
+      console.log('조는중');
+      this.setState({sleepCount: this.state.sleepCount + 1});
+      if (this.state.sleepCount > 8) {
+        this.setState({alert: true, sleepCount: 0});
+      }
       console.log(
         JSON.stringify({
           blinkDetected: 'blinkDetected',
@@ -122,6 +136,15 @@ export default class FaceRecognition extends Component {
         }),
       );
       this.setState({blinkDetected: true});
+    } else if (bothEyes < 0.2) {
+      //잠든상태
+      console.log('자는중');
+      this.setState({sleepCount: this.state.sleepCount + 1});
+      if (this.state.sleepCount > 8) {
+        this.setState({alert: true, sleepCount: 0});
+      }
+    } else {
+      this.setState({sleepCount: 0});
     }
     if (this.state.blinkDetected && bothEyes >= 0.9) {
       this.handleBlinkDetection(faces);
@@ -301,7 +324,13 @@ export default class FaceRecognition extends Component {
   }
 
   render() {
-    return <View style={styles.container}>{this.renderCamera()}</View>;
+    return this.state.alert ? (
+      <View style={{flex: 1}}>
+        <Text>졸음인지됨! 게임으로 넘어가기</Text>
+      </View>
+    ) : (
+      <View style={styles.container}>{this.renderCamera()}</View>
+    );
   }
 }
 
