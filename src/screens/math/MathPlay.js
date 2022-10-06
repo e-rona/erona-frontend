@@ -3,7 +3,7 @@ import {SafeAreaView, View, Text, StyleSheet} from 'react-native';
 import Tts from 'react-native-tts';
 import RNVoice from '@react-native-voice/voice';
 import {useNavigation} from '@react-navigation/native';
-import {extractNumber} from 'kor-to-number';
+import Sound from 'react-native-sound';
 
 import {MicroPhone} from '../../components';
 import {speechToNumber, useSyncState} from '../../utils';
@@ -38,12 +38,21 @@ const quizzes = [
   },
 ];
 
+const audio = [
+  {
+    title: 'alarm',
+    isRequire: true,
+    url: require('../../assets/alarm_short.mp3'),
+  },
+];
 export const MathPlay = () => {
   const [quizIndex, setQuizIndex] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
   const [userAnswer, setUserAnswer] = useState(-1);
   const [rightAnswer, setRightAnswer] = useState(0);
   const [isAnswered, setIsAnswered] = useState(false);
+
+  let sound;
 
   const navigation = useNavigation();
 
@@ -107,6 +116,24 @@ export const MathPlay = () => {
     }
   }, [isRecord, recordVoice]);
 
+  const playAlarm = useCallback(() => {
+    console.log('called');
+    sound = new Sound('alarm_short.mp3', Sound.MAIN_BUNDLE, err => {
+      if (err) {
+        console.log('err occured');
+        console.log(err);
+        return;
+      }
+      sound.play(success => {
+        if (success) {
+          sound.release();
+        } else {
+          console.log('playback failed due to audio decoding errors');
+        }
+      });
+    });
+  }, []);
+
   useEffect(() => {
     // bind handlers to react-native-voice
     RNVoice.onSpeechStart = _onSpeechStart;
@@ -118,8 +145,8 @@ export const MathPlay = () => {
     Tts.addEventListener('tts-start', event => {
       setTimeout(() => {
         if (isAnswered == false) {
-          console.log('************sleeping*********');
           setIsRecord(false);
+          playAlarm();
         }
       }, 5000);
     });
@@ -129,9 +156,14 @@ export const MathPlay = () => {
       recordVoice();
     });
 
+    Sound.setCategory('Playback', true);
+
     // remove listers when component is unmounted
     return () => {
       RNVoice.destroy().then(RNVoice.removeAllListeners);
+      if (sound) {
+        sound.release();
+      }
     };
   }, []);
 
