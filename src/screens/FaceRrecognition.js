@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {RNCamera} from 'react-native-camera';
 
 const landmarkSize = 2;
@@ -104,7 +103,7 @@ export default class FaceRecognition extends Component {
       //졸린상태
       console.log('조는중');
       this.setState({sleepCount: this.state.sleepCount + 1});
-      if (this.state.sleepCount > 1) {
+      if (this.state.sleepCount > 8) {
         this.setState({alert: true, sleepCount: 0});
         this.props.navigation.navigate('MathStackNavigator');
       }
@@ -120,9 +119,8 @@ export default class FaceRecognition extends Component {
       //잠든상태
       console.log('자는중');
       this.setState({sleepCount: this.state.sleepCount + 1});
-      if (this.state.sleepCount > 1) {
+      if (this.state.sleepCount > 8) {
         this.setState({alert: true, sleepCount: 0});
-
         this.props.navigation.navigate('MathStackNavigator');
       }
     } else {
@@ -235,10 +233,7 @@ export default class FaceRecognition extends Component {
         }}
         onFacesDetected={this.state.canDetectFaces ? this.facesDetected : null}
         onFaceDetectionError={error => console.log('FDError', error)} // This is never triggered
-      >
-        {/* {this.renderFaces()} */}
-        {/* {canDetectFaces && this.renderLandmarks()} */}
-      </RNCamera>
+      />
     );
   }
 

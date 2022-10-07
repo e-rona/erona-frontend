@@ -45,6 +45,7 @@ const audio = [
     url: require('../../assets/alarm_short.mp3'),
   },
 ];
+
 export const MathPlay = () => {
   const navigation = useNavigation();
 
@@ -76,36 +77,40 @@ export const MathPlay = () => {
     //console.log('on speech end :', e);
   }, []);
 
-  const _onSpeechResults = useCallback(e => {
-    //console.log(partialResult);
-    const splitted = e.value[0].split(' ');
-    const lastword = splitted[splitted.length - 1];
+  const _onSpeechResults = useCallback(
+    e => {
+      //console.log(partialResult);
+      const splitted = e.value[0].split(' ');
+      const lastword = splitted[splitted.length - 1];
+      console.log(lastword);
 
-    const userSpoken = speechToNumber(lastword);
+      const userSpoken = speechToNumber(lastword);
 
-    console.log('lastword  :', lastword);
-    console.log('userspoken : ', userSpoken);
+      console.log('lastword  :', lastword);
+      console.log('userspoken : ', userSpoken);
 
-    setUserAnswer(userSpoken);
+      setUserAnswer(userSpoken);
 
-    // 0.5초마다 이전 숫자랑 현재 숫자 비교
-    setTimeout(() => {
-      setUserAnswer(userAnswer => {
-        // 말이 끝났으면
-        if (userAnswer === userSpoken) {
-          console.log('Processed transcript (iOS): ', userSpoken);
-          // Reset the transcript
-          setIsRecord(false);
-          setIsAnswered(true);
-          testAnswer(userAnswer);
-          RNVoice.destroy();
+      // 0.5초마다 이전 숫자랑 현재 숫자 비교
+      setTimeout(() => {
+        setUserAnswer(userAnswer => {
+          // 말이 끝났으면
+          if (userAnswer === userSpoken) {
+            console.log('Processed transcript (iOS): ', userSpoken);
+            // Reset the transcript
+            setIsRecord(false);
+            setIsAnswered(true);
+            testAnswer(userAnswer);
+            RNVoice.destroy();
 
-          return '';
-        }
-        return userAnswer;
-      });
-    }, 500);
-  }, []);
+            return '';
+          }
+          return userAnswer;
+        });
+      }, 500);
+    },
+    [testAnswer],
+  );
 
   const _onSpeechError = useCallback(e => {}, []);
 
@@ -114,14 +119,18 @@ export const MathPlay = () => {
     RNVoice.start('ko-KR');
   }, []);
 
-  const testAnswer = useCallback(userAnswer => {
-    if (quizzes[0].answer == userAnswer) {
-      navigation.navigate('Success');
-      setRightAnswer(rightAnswer => rightAnswer + 1);
-    } else {
-      console.log('틀렸습니다');
-    }
-  }, []);
+  const testAnswer = useCallback(
+    userAnswer => {
+      console.log('userAnswer : ', userAnswer);
+      if (quizzes[0].answer == userAnswer) {
+        navigation.navigate('Success');
+        setRightAnswer(rightAnswer => rightAnswer + 1);
+      } else {
+        console.log('틀렸습니다');
+      }
+    },
+    [navigation],
+  );
 
   const onPressMic = useCallback(() => {
     if (isRecord) {

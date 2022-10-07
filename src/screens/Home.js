@@ -2,16 +2,17 @@ import React, {useEffect, useCallback} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {ButtonSmall, ButtonRound} from '../components';
+import {CurrentPosition} from './CurrentPosition';
 
 export const Home = () => {
   const navigation = useNavigation();
   const onPressFaceRecognition = useCallback(() => {
     navigation.navigate('FaceRecognition');
-  }, []);
+  }, [navigation]);
 
   const onPressSpeechRecognition = useCallback(() => {
     navigation.navigate('MathStackNavigator');
-  }, []);
+  }, [navigation]);
 
   const onPressSuccess = useCallback(() => {
     navigation.navigate('Success');
