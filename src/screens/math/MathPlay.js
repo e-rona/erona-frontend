@@ -46,6 +46,8 @@ const audio = [
   },
 ];
 export const MathPlay = () => {
+  const navigation = useNavigation();
+
   const [quizIndex, setQuizIndex] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
   const [userAnswer, setUserAnswer] = useState(-1);
@@ -61,12 +63,12 @@ export const MathPlay = () => {
         setIsRecord(false);
         playAlarm();
       }
+
+      navigation.navigate('CurrentPosition');
     }, 10000);
 
     return () => clearTimeout(timeout);
   }, [isAnswered]);
-
-  const navigation = useNavigation();
 
   const _onSpeechStart = useCallback(() => {}, []);
 
