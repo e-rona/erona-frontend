@@ -22,7 +22,7 @@ export const Home = () => {
     <View style={styled.rootContainer}>
       <ButtonSmall label="졸음 인식" onPress={onPressFaceRecognition} style={{marginBottom: 16}} />
       <ButtonSmall label="사칙 연산" onPress={onPressSpeechRecognition} style={{marginBottom: 16}} />
-      <ButtonSmall label="성공 화면" onPress={onPressSuccess} />
+      <ButtonSmall label="성공 화면" onPress={onPressSuccess} style={{marginBottom: 16}} />
       <ButtonSmall label="현재 위치" onPress={CurrentPosition} />
     </View>
   );
