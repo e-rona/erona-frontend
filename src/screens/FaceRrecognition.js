@@ -1,11 +1,5 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 
 // const flashModeOrder = {
@@ -127,6 +121,7 @@ export default class FaceRecognition extends Component {
       this.setState({sleepCount: this.state.sleepCount + 1});
       if (this.state.sleepCount > 8) {
         this.setState({alert: true, sleepCount: 0});
+        this.props.navigation.navigate('MathStackNavigator');
       }
       console.log(
         JSON.stringify({
@@ -142,6 +137,7 @@ export default class FaceRecognition extends Component {
       this.setState({sleepCount: this.state.sleepCount + 1});
       if (this.state.sleepCount > 8) {
         this.setState({alert: true, sleepCount: 0});
+        this.props.navigation.navigate('MathStackNavigator');
       }
     } else {
       this.setState({sleepCount: 0});
@@ -153,22 +149,10 @@ export default class FaceRecognition extends Component {
     this.setState({faces});
   };
 
-  renderFace = ({
-    bounds,
-    faceID,
-    rollAngle,
-    yawAngle,
-    leftEyeOpenProbability,
-    rightEyeOpenProbability,
-    smilingProbability,
-  }) => (
+  renderFace = ({bounds, faceID, rollAngle, yawAngle, leftEyeOpenProbability, rightEyeOpenProbability, smilingProbability}) => (
     <View
       key={faceID}
-      transform={[
-        {perspective: 600},
-        {rotateZ: `${rollAngle.toFixed(0)}deg`},
-        {rotateY: `${yawAngle.toFixed(0)}deg`},
-      ]}
+      transform={[{perspective: 600}, {rotateZ: `${rollAngle.toFixed(0)}deg`}, {rotateY: `${yawAngle.toFixed(0)}deg`}]}
       style={[
         styles.face,
         {
@@ -182,9 +166,7 @@ export default class FaceRecognition extends Component {
         eyeOpenProbability:
         {leftEyeOpenProbability + rightEyeOpenProbability / 2}
       </Text>
-      <Text style={styles.faceText}>
-        smilingProbability: {smilingProbability}
-      </Text>
+      <Text style={styles.faceText}>smilingProbability: {smilingProbability}</Text>
     </View>
   );
 
@@ -258,16 +240,8 @@ export default class FaceRecognition extends Component {
           buttonPositive: 'Ok',
           buttonNegative: 'Cancel',
         }}
-        faceDetectionLandmarks={
-          RNCamera.Constants.FaceDetection.Landmarks
-            ? RNCamera.Constants.FaceDetection.Landmarks.all
-            : undefined
-        }
-        faceDetectionClassifications={
-          RNCamera.Constants.FaceDetection.Classifications.all
-            ? RNCamera.Constants.FaceDetection.Classifications.all
-            : undefined
-        }
+        faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks ? RNCamera.Constants.FaceDetection.Landmarks.all : undefined}
+        faceDetectionClassifications={RNCamera.Constants.FaceDetection.Classifications.all ? RNCamera.Constants.FaceDetection.Classifications.all : undefined}
         onCameraReady={() => {
           console.log('onCameraReady');
           this.setState({canDetectFaces: true});
@@ -289,9 +263,7 @@ export default class FaceRecognition extends Component {
               flexDirection: 'row',
               justifyContent: 'space-around',
             }}>
-            <TouchableOpacity
-              style={styles.flipButton}
-              onPress={this.toggleFacing.bind(this)}>
+            <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
               <Text style={styles.flipText}> FLIP </Text>
             </TouchableOpacity>
           </View>
@@ -306,11 +278,7 @@ export default class FaceRecognition extends Component {
               alignSelf: 'flex-end',
             }}>
             <TouchableOpacity
-              style={[
-                styles.flipButton,
-                styles.picButton,
-                {flex: 0.3, alignSelf: 'flex-end'},
-              ]}
+              style={[styles.flipButton, styles.picButton, {flex: 0.3, alignSelf: 'flex-end'}]}
               // onPress={this.takePicture.bind(this)}
             >
               <Text style={styles.flipText}> SNAP </Text>
