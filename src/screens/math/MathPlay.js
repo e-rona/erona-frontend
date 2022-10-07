@@ -54,6 +54,18 @@ export const MathPlay = () => {
 
   let sound;
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      console.log('set time out');
+      if (isAnswered == false) {
+        setIsRecord(false);
+        playAlarm();
+      }
+    }, 10000);
+
+    return () => clearTimeout(timeout);
+  }, [isAnswered]);
+
   const navigation = useNavigation();
 
   const _onSpeechStart = useCallback(() => {}, []);
@@ -68,6 +80,9 @@ export const MathPlay = () => {
     const lastword = splitted[splitted.length - 1];
 
     const userSpoken = speechToNumber(lastword);
+
+    console.log('lastword  :', lastword);
+    console.log('userspoken : ', userSpoken);
 
     setUserAnswer(userSpoken);
 
@@ -142,15 +157,17 @@ export const MathPlay = () => {
     RNVoice.onSpeechError = _onSpeechError;
     RNVoice.onSpeechRecognized = _onSpeechRecognized;
 
-    Tts.addEventListener('tts-start', event => {
-      setTimeout(() => {
-        if (isAnswered == false) {
-          setIsRecord(false);
-          playAlarm();
-        }
-      }, 5000);
-    });
-    Tts.addEventListener('tts-finish', event => {
+    // Tts.addEventListener('tts-start', event => {
+    //   console.log('herererererererer');
+    //   setTimeout(() => {
+    //     if (isAnswered == false) {
+    //       setIsRecord(false);
+    //       playAlarm();
+    //     }
+    //   }, 5000);
+    // });
+    const listener = Tts.addEventListener('tts-finish', event => {
+      console.log('tts-done');
       // set record on when quiz notification is done
       setIsRecord(true);
       recordVoice();
@@ -164,6 +181,7 @@ export const MathPlay = () => {
       if (sound) {
         sound.release();
       }
+      listener.remove();
     };
   }, []);
 
@@ -171,8 +189,8 @@ export const MathPlay = () => {
   //   Tts.speak(quizzes[quizIndex].num1 + '더하기' + quizzes[quizIndex].num2 + '는?');
   // }, []);
   useEffect(() => {
-    console.log(quizIndex);
-    Tts.speak(quizzes[quizIndex].num1 + '더하기' + quizzes[quizIndex].num2 + '는?', TTS_ANDROID_PARAMS);
+    const toTalk = quizzes[quizIndex].num1 + '더하기' + quizzes[quizIndex].num2 + '는?';
+    Tts.speak(toTalk, TTS_ANDROID_PARAMS);
   }, [quizIndex]);
 
   return (

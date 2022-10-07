@@ -6,6 +6,10 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {setCustomText} from 'react-native-global-props';
 import Tts from 'react-native-tts';
 import {RootStackNavigator} from './src/navigations/RootStackNavigator';
+import {LogBox} from 'react-native';
+
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 import {gray900} from './src/themes/colors';
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useCallback} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {ButtonSmall} from '../components';
+import {ButtonSmall, ButtonRound} from '../components';
 
 export const Home = () => {
   const navigation = useNavigation();
@@ -16,9 +16,13 @@ export const Home = () => {
   const onPressSuccess = useCallback(() => {
     navigation.navigate('Success');
   }, []);
+
+  const onPressKakaoMap = useCallback(() => {
+    navigation.navigate('KakaoMap');
+  }, []);
   return (
     <View style={styled.rootContainer}>
-      <ButtonSmall
+      {/* <ButtonSmall
         label="졸음 인식"
         onPress={onPressFaceRecognition}
         style={{marginBottom: 16}}
@@ -28,7 +32,9 @@ export const Home = () => {
         onPress={onPressSpeechRecognition}
         style={{marginBottom: 16}}
       />
-      <ButtonSmall label="성공 화면" onPress={onPressSuccess} />
+      <ButtonSmall label="성공 화면" onPress={onPressSuccess} /> */}
+      <ButtonRound label="시작" onPress={onPressFaceRecognition} />
+      {/* <ButtonRound label="카카오맵" onPress={onPressKakaoMap} /> */}
     </View>
   );
 };

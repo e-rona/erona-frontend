@@ -7,11 +7,14 @@ import {InitText} from '../../components';
 
 export const MathInit = () => {
   const navigation = useNavigation();
+
   useEffect(() => {
     // 말이 끝나면 다음 화면으로 이동
     Tts.addEventListener('tts-finish', () => {
       navigation.navigate('MathPlay');
     });
+  }, []);
+  useEffect(() => {
     Tts.speak('사칙연산 게임을 시작합니다', {
       rate: 0.5,
       androidParams: {
@@ -20,6 +23,10 @@ export const MathInit = () => {
         KEY_PARAM_STREAM: 'STREAM_NOTIFICATION',
       },
     });
+
+    // return () => {
+    //   Tts.removeEventListener('tts-finish');
+    // };
   }, []);
   return (
     <SafeAreaView style={styled.container}>
