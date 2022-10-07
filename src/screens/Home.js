@@ -12,6 +12,10 @@ export const Home = () => {
   const onPressSpeechRecognition = useCallback(() => {
     navigation.navigate('MathStackNavigator');
   }, []);
+
+  const onPressSuccess = useCallback(() => {
+    navigation.navigate('Success');
+  }, []);
   return (
     <View style={styled.rootContainer}>
       <ButtonSmall
@@ -19,7 +23,12 @@ export const Home = () => {
         onPress={onPressFaceRecognition}
         style={{marginBottom: 16}}
       />
-      <ButtonSmall label="사칙 연산" onPress={onPressSpeechRecognition} />
+      <ButtonSmall
+        label="사칙 연산"
+        onPress={onPressSpeechRecognition}
+        style={{marginBottom: 16}}
+      />
+      <ButtonSmall label="성공 화면" onPress={onPressSuccess} />
     </View>
   );
 };

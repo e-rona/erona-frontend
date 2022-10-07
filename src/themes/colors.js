@@ -1,4 +1,15 @@
 export const main = '#3EB27E';
 export const main50 = '#F4F7F5';
 export const main100 = '#E8F7EE';
-export const gray800 = '#121212';
+export const gray900 = '#212121';
+export const gray800 = '#424242';
+export const gray700 = '#616161';
+export const gray600 = '#757575';
+export const gray500 = '#9e9e9e';
+export const gray400 = '#bdbdbd';
+export const gray300 = '#e0e0e0';
+export const gray200 = '#eeeee';
+export const gray100 = '#f5f5f5';
+export const gray50 = '#fafafa';
+export const white = '#ffffff';
+export const black = '#121212';

@@ -23,6 +23,7 @@
 		A3AEF1BD28EC048F00E5D87A /* Pretendard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = A3AEF1B428EC048F00E5D87A /* Pretendard-SemiBold.otf */; };
 		A3AEF1BE28EC048F00E5D87A /* Pretendard-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = A3AEF1B528EC048F00E5D87A /* Pretendard-Thin.otf */; };
 		A3AEF1BF28EC048F00E5D87A /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = A3AEF1B628EC048F00E5D87A /* Pretendard-Medium.otf */; };
+		A3C5319C28EF413A009F3BAC /* alarm_short.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A3C5319B28EF413A009F3BAC /* alarm_short.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		A3AEF1B428EC048F00E5D87A /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-SemiBold.otf"; path = "Fonts/Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
 		A3AEF1B528EC048F00E5D87A /* Pretendard-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Thin.otf"; path = "Fonts/Pretendard-Thin.otf"; sourceTree = "<group>"; };
 		A3AEF1B628EC048F00E5D87A /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Medium.otf"; path = "Fonts/Pretendard-Medium.otf"; sourceTree = "<group>"; };
+		A3C5319B28EF413A009F3BAC /* alarm_short.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = alarm_short.mp3; path = ../src/assets/alarm_short.mp3; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -134,6 +136,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				A3C5319B28EF413A009F3BAC /* alarm_short.mp3 */,
 				A3AEF1AE28EC048E00E5D87A /* Pretendard-Black.otf */,
 				A3AEF1AF28EC048F00E5D87A /* Pretendard-Bold.otf */,
 				A3AEF1B228EC048F00E5D87A /* Pretendard-ExtraBold.otf */,
@@ -278,6 +281,7 @@
 				A3AEF1BD28EC048F00E5D87A /* Pretendard-SemiBold.otf in Resources */,
 				A3AEF1BE28EC048F00E5D87A /* Pretendard-Thin.otf in Resources */,
 				A3AEF1BF28EC048F00E5D87A /* Pretendard-Medium.otf in Resources */,
+				A3C5319C28EF413A009F3BAC /* alarm_short.mp3 in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
