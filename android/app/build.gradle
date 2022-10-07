@@ -169,6 +169,8 @@ android {
                     abiFilters (*reactNativeArchitectures())
                 }
             }
+
+            missingDimensionStrategy 'react-native-camera', 'mlkit'
         }
     }
 
@@ -317,3 +319,5 @@ def isNewArchitectureEnabled() {
     // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
     return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
+
+apply plugin: 'com.google.android.gms.strict-version-matcher-plugin'
