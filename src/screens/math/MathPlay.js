@@ -45,7 +45,9 @@ const audio = [
     url: require('../../assets/alarm_short.mp3'),
   },
 ];
+
 export const MathPlay = () => {
+  const navigation = useNavigation();
   const [quizIndex, setQuizIndex] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
   const [userAnswer, setUserAnswer] = useState(-1);
@@ -54,7 +56,56 @@ export const MathPlay = () => {
 
   let sound;
 
-  const navigation = useNavigation();
+  useEffect(() => {
+    // bind handlers to react-native-voice
+    RNVoice.onSpeechStart = _onSpeechStart;
+    RNVoice.onSpeechEnd = _onSpeechEnd;
+    RNVoice.onSpeechResults = _onSpeechResults;
+    RNVoice.onSpeechError = _onSpeechError;
+    RNVoice.onSpeechRecognized = _onSpeechRecognized;
+
+    // Tts.addEventListener('tts-start', event => {
+    //   console.log('herererererererer');
+    //   setTimeout(() => {
+    //     if (isAnswered == false) {
+    //       setIsRecord(false);
+    //       playAlarm();
+    //     }
+    //   }, 5000);
+    // });
+    Tts.addEventListener('tts-finish', event => {
+      // set record on when quiz notification is done
+      setIsRecord(true);
+      recordVoice();
+    });
+
+    Sound.setCategory('Playback', true);
+
+    // remove listers when component is unmounted
+    return () => {
+      RNVoice.destroy().then(RNVoice.removeAllListeners);
+      if (sound) {
+        sound.release();
+      }
+      Tts.removeEventListener('tts-finish');
+    };
+  }, [_onSpeechEnd, _onSpeechError, _onSpeechRecognized, _onSpeechResults, _onSpeechStart, recordVoice, sound]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (isAnswered === false) {
+        setIsRecord(false);
+        playAlarm();
+      }
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [isAnswered, playAlarm]);
+
+  useEffect(() => {
+    console.log(quizIndex);
+    Tts.speak(quizzes[quizIndex].num1 + '더하기' + quizzes[quizIndex].num2 + '는?', TTS_ANDROID_PARAMS);
+  }, [quizIndex]);
 
   const _onSpeechStart = useCallback(() => {}, []);
 
@@ -62,33 +113,38 @@ export const MathPlay = () => {
     //console.log('on speech end :', e);
   }, []);
 
-  const _onSpeechResults = useCallback(e => {
-    //console.log(partialResult);
-    const splitted = e.value[0].split(' ');
-    const lastword = splitted[splitted.length - 1];
+  const _onSpeechResults = useCallback(
+    e => {
+      //console.log(partialResult);
+      const splitted = e.value[0].split(' ');
+      const lastword = splitted[splitted.length - 1];
+      console.log(lastword);
 
-    const userSpoken = speechToNumber(lastword);
+      const userSpoken = speechToNumber(lastword);
 
-    setUserAnswer(userSpoken);
+      setUserAnswer(userSpoken);
+      console.log(userSpoken);
 
-    // 0.5초마다 이전 숫자랑 현재 숫자 비교
-    setTimeout(() => {
-      setUserAnswer(userAnswer => {
-        // 말이 끝났으면
-        if (userAnswer === userSpoken) {
-          console.log('Processed transcript (iOS): ', userSpoken);
-          // Reset the transcript
-          setIsRecord(false);
-          setIsAnswered(true);
-          testAnswer(userAnswer);
-          RNVoice.destroy();
+      // 0.5초마다 이전 숫자랑 현재 숫자 비교
+      setTimeout(() => {
+        setUserAnswer(userAnswer => {
+          // 말이 끝났으면
+          if (userAnswer === userSpoken) {
+            console.log('Processed transcript (iOS): ', userSpoken);
+            // Reset the transcript
+            setIsRecord(false);
+            setIsAnswered(true);
+            testAnswer(userAnswer);
+            RNVoice.destroy();
 
-          return '';
-        }
-        return userAnswer;
-      });
-    }, 500);
-  }, []);
+            return '';
+          }
+          return userAnswer;
+        });
+      }, 500);
+    },
+    [testAnswer],
+  );
 
   const _onSpeechError = useCallback(e => {}, []);
 
@@ -97,14 +153,18 @@ export const MathPlay = () => {
     RNVoice.start('ko-KR');
   }, []);
 
-  const testAnswer = useCallback(userAnswer => {
-    if (quizzes[0].answer == userAnswer) {
-      navigation.navigate('Success');
-      setRightAnswer(rightAnswer => rightAnswer + 1);
-    } else {
-      console.log('틀렸습니다');
-    }
-  }, []);
+  const testAnswer = useCallback(
+    userAnswer => {
+      console.log('userAnswer : ', userAnswer);
+      if (quizzes[0].answer == userAnswer) {
+        navigation.navigate('Success');
+        setRightAnswer(rightAnswer => rightAnswer + 1);
+      } else {
+        console.log('틀렸습니다');
+      }
+    },
+    [navigation],
+  );
 
   const onPressMic = useCallback(() => {
     if (isRecord) {
@@ -134,46 +194,9 @@ export const MathPlay = () => {
     });
   }, []);
 
-  useEffect(() => {
-    // bind handlers to react-native-voice
-    RNVoice.onSpeechStart = _onSpeechStart;
-    RNVoice.onSpeechEnd = _onSpeechEnd;
-    RNVoice.onSpeechResults = _onSpeechResults;
-    RNVoice.onSpeechError = _onSpeechError;
-    RNVoice.onSpeechRecognized = _onSpeechRecognized;
-
-    Tts.addEventListener('tts-start', event => {
-      setTimeout(() => {
-        if (isAnswered == false) {
-          setIsRecord(false);
-          playAlarm();
-        }
-      }, 5000);
-    });
-    Tts.addEventListener('tts-finish', event => {
-      // set record on when quiz notification is done
-      setIsRecord(true);
-      recordVoice();
-    });
-
-    Sound.setCategory('Playback', true);
-
-    // remove listers when component is unmounted
-    return () => {
-      RNVoice.destroy().then(RNVoice.removeAllListeners);
-      if (sound) {
-        sound.release();
-      }
-    };
-  }, []);
-
   // const readQuiz = useCallback(quizIndex => {
   //   Tts.speak(quizzes[quizIndex].num1 + '더하기' + quizzes[quizIndex].num2 + '는?');
   // }, []);
-  useEffect(() => {
-    console.log(quizIndex);
-    Tts.speak(quizzes[quizIndex].num1 + '더하기' + quizzes[quizIndex].num2 + '는?', TTS_ANDROID_PARAMS);
-  }, [quizIndex]);
 
   return (
     <SafeAreaView style={styled.container}>

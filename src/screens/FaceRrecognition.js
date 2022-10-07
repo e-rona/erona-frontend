@@ -2,22 +2,6 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 
-// const flashModeOrder = {
-//   off: 'on',
-//   on: 'auto',
-//   auto: 'torch',
-//   torch: 'off',
-// };
-
-// const wbOrder = {
-//   auto: 'sunny',
-//   sunny: 'cloudy',
-//   cloudy: 'shadow',
-//   shadow: 'fluorescent',
-//   fluorescent: 'incandescent',
-//   incandescent: 'auto',
-// };
-
 const landmarkSize = 2;
 
 export default class FaceRecognition extends Component {
@@ -119,7 +103,7 @@ export default class FaceRecognition extends Component {
       //졸린상태
       console.log('조는중');
       this.setState({sleepCount: this.state.sleepCount + 1});
-      if (this.state.sleepCount > 8) {
+      if (this.state.sleepCount > 2) {
         this.setState({alert: true, sleepCount: 0});
         this.props.navigation.navigate('MathStackNavigator');
       }
@@ -135,7 +119,7 @@ export default class FaceRecognition extends Component {
       //잠든상태
       console.log('자는중');
       this.setState({sleepCount: this.state.sleepCount + 1});
-      if (this.state.sleepCount > 8) {
+      if (this.state.sleepCount > 2) {
         this.setState({alert: true, sleepCount: 0});
         this.props.navigation.navigate('MathStackNavigator');
       }
@@ -224,6 +208,7 @@ export default class FaceRecognition extends Component {
     // };
     return (
       <RNCamera
+        captureAudio={false}
         ref={ref => {
           this.camera = ref;
         }}
@@ -248,46 +233,7 @@ export default class FaceRecognition extends Component {
         }}
         onFacesDetected={this.state.canDetectFaces ? this.facesDetected : null}
         onFaceDetectionError={error => console.log('FDError', error)} // This is never triggered
-      >
-        <View
-          style={{
-            flex: 0.5,
-            height: 72,
-            backgroundColor: 'transparent',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-          }}>
-          <View
-            style={{
-              backgroundColor: 'transparent',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
-            <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
-              <Text style={styles.flipText}> FLIP </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={{bottom: 0}}>
-          <View
-            style={{
-              height: 56,
-              backgroundColor: 'transparent',
-              flexDirection: 'row',
-              alignSelf: 'flex-end',
-            }}>
-            <TouchableOpacity
-              style={[styles.flipButton, styles.picButton, {flex: 0.3, alignSelf: 'flex-end'}]}
-              // onPress={this.takePicture.bind(this)}
-            >
-              <Text style={styles.flipText}> SNAP </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* {this.renderFaces()} */}
-        {/* {canDetectFaces && this.renderLandmarks()} */}
-      </RNCamera>
+      />
     );
   }
 
