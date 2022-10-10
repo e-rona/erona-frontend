@@ -124,6 +124,7 @@ export const MathPlay = () => {
         setRightAnswer(rightAnswer => rightAnswer + 1);
       } else {
         console.log('틀렸습니다');
+        navigation.navigate('CurrentPosition');
       }
     },
     [navigation],

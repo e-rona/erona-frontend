@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Success} from '../screens';
-import {Home, KakaoMap} from '../screens';
+import {Home} from '../screens';
 import FaceRecognition from '../screens/FaceRrecognition';
 import {MathStackNavigator} from './MathStackNavigator';
 import {CurrentPosition} from '../screens/CurrentPosition';
@@ -15,7 +15,7 @@ export const RootStackNavigator = () => {
       <Stack.Screen name="FaceRecognition" component={FaceRecognition} />
       <Stack.Screen name="MathStackNavigator" component={MathStackNavigator} />
       <Stack.Screen name="Success" component={Success} />
-      <Stack.Screen name="CurrentPosition" component={CurrentPosition}></Stack.Screen>
+      <Stack.Screen name="CurrentPosition" component={CurrentPosition} />
     </Stack.Navigator>
   );
 };
