@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {useNavigation} from '@react-navigation/native';
@@ -21,10 +21,32 @@ const FaceRecognition = () => {
   const [detectFaces, setDetectFaces] = useState(false);
   const [face, setFace] = useState([]);
   const [sleepCount, setSleepCount] = useState(0);
+  const [sleepDetect, setSleepDetect] = useState(false);
   const [detectCount, setDetectCount] = useState(0);
   const [alert, setAlert] = useState(false);
   const [executeTime, setExcuteTime] = useState(0);
   const [closeTime, setCloseTime] = useState(0);
+  const [timer, setTimer] = useState();
+
+  useEffect(() => {
+    var now = new Date();
+    setExcuteTime(now.getTime());
+  }, []);
+
+  useEffect(() => {
+    var now = new Date();
+    const elapsedMSec = now.getTime() - executeTime;
+    const elapsedSec = elapsedMSec / 1000;
+    console.log(elapsedSec, closeTime);
+    let perclos = (closeTime / elapsedSec) * 100;
+    if (elapsedSec > 60 && perclos > 30) {
+      navigation.navigate('MathStackNavigator');
+    }
+  }, [closeTime, executeTime, navigation]);
+
+  const sleeping = () => {
+    setCloseTime(t => t + 1);
+  };
 
   const facesDetected = ({faces}) => {
     if (!faces.length) {
@@ -46,25 +68,45 @@ const FaceRecognition = () => {
     const smileprob = faces[0].smilingProbability;
     const bothEyes = (rightEye + leftEye) / 2;
 
-    console.log(bothEyes);
+    // console.log(bothEyes);
     if (bothEyes < 0.5 && bothEyes >= 0.2) {
       //졸린상태
       console.log('조는중');
-      setSleepCount(sleepCount + 1);
-      if (sleepCount > 8) {
-        setSleepCount(0);
-        navigation.navigate('MathStackNavigator');
+      if (!sleepDetect) {
+        // var now = new Date();
+        // setSleepCount(now.getTime());
+        setSleepDetect(true);
+        setTimer(setInterval(sleeping, 1000));
       }
+      // if (sleepCount > 8) {
+      //   setSleepCount(0);
+      //   navigation.navigate('MathStackNavigator');
+      // }
     } else if (bothEyes < 0.2) {
       //잠든상태
       console.log('자는중');
-      setSleepCount(sleepCount + 1);
-      if (sleepCount > 8) {
-        setSleepCount(0);
-        navigation.navigate('MathStackNavigator');
+      if (!sleepDetect) {
+        // var now = new Date();
+        // setSleepCount(now.getTime());
+        setSleepDetect(true);
+        setTimer(setInterval(sleeping, 1000));
       }
+      // if (sleepCount > 8) {
+      //   setSleepCount(0);
+      //   navigation.navigate('MathStackNavigator');
+      // }
     } else {
-      setSleepCount(0);
+      setSleepDetect(false);
+      clearInterval(timer);
+      // if (sleepDetect) {
+      //   //   var now = new Date();
+      //   //   console.log('눈감은 시간 : ', now.getTime() - sleepCount);
+      //   //   setCloseTime(closeTime + now.getTime() - sleepCount);
+      //   //   setSleepCount(null);
+
+      //   clearInterval(timer);
+      //   clearInterval(timer);
+      // }
     }
 
     setFace([...faces]);
