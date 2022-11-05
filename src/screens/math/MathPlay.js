@@ -6,13 +6,14 @@ import RNVoice from '@react-native-voice/voice';
 
 import {MicroPhone} from '../../components';
 import {getGame, queryKeys} from '../../api';
-import {useSyncState} from '../../utils';
 
 export const MathPlay = () => {
   const [isRecord, setIsRecord] = useState(false); // 마이크 켜져 있는지
   const [quizList, setQuizList] = useState([]); // 퀴즈 목록
   const [quizIndex, setQuizIndex] = useState(0); // 현재 퀴즈 인덱스
   const [userAnswer, setUserAnswer] = useState('');
+  const [finalAnswer, setFinalAnswer] = useState('');
+  const [isRecognizing, setIsRecognizing] = useState(true);
 
   useQuery(queryKeys.game, getGame, {
     onSuccess: data => {
@@ -37,10 +38,14 @@ export const MathPlay = () => {
   };
 
   const testAnswer = (userAnswer, quizList, quizIndex) => {
-    if (userAnswer == quizList[quizIndex].answer) {
+    console.log('test answer');
+
+    console.log(quizList[quizIndex].answer);
+    if (userAnswer.replace(' ', '') == quizList[quizIndex].answer.replace(' ', '')) {
       console.log('맞았습니다');
       readQuiz(quizList[quizIndex + 1].quiz);
       setQuizIndex(quizIndex => quizIndex + 1);
+      setIsRecord(false);
     } else {
       console.log('틀렸습니다');
     }
@@ -53,29 +58,62 @@ export const MathPlay = () => {
     console.log('onSpeechEnd');
     setIsRecord(false);
   };
+
+  const stopRecognizing = async () => {
+    try {
+      await RNVoice.stop();
+      setIsRecord(false);
+      console.log('stoppred');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const destroyRecognizing = async () => {
+    try {
+      await RNVoice.destroy();
+      setIsRecord(false);
+      console.log('destroyed');
+    } catch (e) {
+      console.error(e);
+    }
+  };
   const _onSpeechResults = event => {
     const userSpoken = event.value[0];
     console.log(userSpoken);
+    // setUserAnswer(prevAnswer => {
+    //   if (prevAnswer == userSpoken) {
+    //     destroyRecognizing();
+    //     testAnswer(userSpoken, quizList, quizIndex);
+    //     return '';
+    //   }
+    //   return userSpoken;
+    // });
     setUserAnswer(userSpoken);
 
-    setTimeout(() => {
-      setUserAnswer(userAnswer => {
-        console.log('userAnswer : ', userAnswer);
-        console.log('userSpoken : ', userSpoken);
-        if (userAnswer == userSpoken) {
-          console.log('Processed transcript (iOS): ', userSpoken);
-          setIsRecord(false);
+    // setTimeout(() => {
+    //   setUserAnswer(prevAnswer => {
+    //     if (prevAnswer == userSpoken) {
+    //       destroyRecognizing();
 
-          testAnswer(userAnswer, quizList, quizIndex);
-          RNVoice.destroy().then(recordVoice);
-          return '';
-        }
-
-        return userAnswer;
-      });
-    }, 500);
+    //       console.log('Processed transcript (iOS): ', userSpoken);
+    //       setFinalAnswer(userSpoken);
+    //       testAnswer(userSpoken, quizList, quizIndex);
+    //       return '';
+    //     }
+    //     return prevAnswer;
+    //   });
+    // }, 700);
   };
-
+  useEffect(() => {
+    const prev = userAnswer;
+    setTimeout(() => {
+      if (prev == userAnswer) {
+        setUserAnswer('');
+        console.log('done');
+      }
+    }, 2000);
+  }, [userAnswer]);
   const _onSpeechError = () => {};
   const _onSpeechRecognized = () => {};
 
@@ -85,19 +123,27 @@ export const MathPlay = () => {
       EXTRA_PARTIAL_RESULTS: true,
     });
   };
+  useEffect(() => {
+    console.log('quiz list changed');
+    if (quizList.length > 0) {
+      RNVoice.onSpeechResults = _onSpeechResults;
+    }
+  }, [quizList, quizIndex]);
 
   useEffect(() => {
     RNVoice.onSpeechStart = _onSpeechStart;
     RNVoice.onSpeechEnd = _onSpeechEnd;
     RNVoice.onSpeechError = _onSpeechError;
     RNVoice.onSpeechRecognized = _onSpeechRecognized;
-    RNVoice.onSpeechResults = _onSpeechResults;
+    // RNVoice.onSpeechResults = _onSpeechResults;
 
     // RNVoice.onSpeechPartialResults = _onSpeechPartialResults;
 
     Tts.addEventListener('tts-finish', () => {
-      setIsRecord(true);
-      recordVoice();
+      setTimeout(() => {
+        setIsRecord(true);
+        recordVoice();
+      }, 300);
     });
 
     return () => {
