@@ -39,7 +39,7 @@ const FaceRecognition = () => {
     const elapsedSec = elapsedMSec / 1000;
     console.log(elapsedSec, closeTime);
     let perclos = (closeTime / elapsedSec) * 100;
-    if (elapsedSec > 60 && perclos > 30) {
+    if (perclos > 30) {
       navigation.navigate('MathStackNavigator');
     }
   }, [closeTime, executeTime, navigation]);
