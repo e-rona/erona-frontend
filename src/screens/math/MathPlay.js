@@ -14,6 +14,9 @@ export const MathPlay = () => {
   const [userAnswer, setUserAnswer] = useState('');
   const [finalAnswer, setFinalAnswer] = useState('');
   const [isRecognizing, setIsRecognizing] = useState(true);
+  const [timer, setTimer] = useState(); //타이머
+  const [count, setCount] = useState(5); //5초 카운트
+  const [finish, setFinish] = useState(''); //인식 끝
 
   useQuery(queryKeys.game, getGame, {
     onSuccess: data => {
@@ -21,6 +24,54 @@ export const MathPlay = () => {
       readQuiz(data.gameList[0].quiz);
     },
   });
+
+  useEffect(() => {
+    RNVoice.onSpeechStart = _onSpeechStart;
+    RNVoice.onSpeechEnd = _onSpeechEnd;
+    RNVoice.onSpeechError = _onSpeechError;
+    RNVoice.onSpeechRecognized = _onSpeechRecognized;
+    RNVoice.onSpeechResults = _onSpeechResults;
+    RNVoice.onSpeechPartialResults = _onSpeechPartialResults;
+
+    Tts.addEventListener('tts-finish', () => {
+      setTimeout(() => {
+        setIsRecord(true);
+        recordVoice();
+      }, 300);
+    });
+
+    return () => {
+      Tts.removeEventListener('tts-finish');
+      RNVoice.destroy().then(RNVoice.removeAllListeners);
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   const prev = userAnswer;
+  //   setTimeout(() => {
+  //     if (prev == userAnswer) {
+  //       setUserAnswer('');
+  //       console.log('done');
+  //     }
+  //   }, 2000);
+  // }, [userAnswer]);
+
+  useEffect(() => {
+    console.log('quiz list changed');
+    if (quizList.length > 0) {
+      RNVoice.onSpeechResults = _onSpeechResults;
+    }
+  }, [quizList, quizIndex]);
+
+  //5초->0초되면 타이머 중지&인식 끝
+  useEffect(() => {
+    if (count === 0) {
+      clearInterval(timer);
+      setCount(5);
+      setFinish(true);
+      stopRecognizing();
+    }
+  }, [count, timer]);
 
   const onPressMic = () => {
     if (isRecord) {
@@ -53,17 +104,28 @@ export const MathPlay = () => {
 
   const _onSpeechStart = () => {
     console.log('onSpeechStart');
+    //5초 시작
+    setFinish(false);
+    setTimer(
+      setInterval(() => {
+        if (count >= 0) {
+          setCount(c => c - 1);
+        }
+      }, 1000),
+    );
   };
+
   const _onSpeechEnd = () => {
     console.log('onSpeechEnd');
     setIsRecord(false);
   };
 
   const stopRecognizing = async () => {
+    console.log('인식 끝');
     try {
       await RNVoice.stop();
       setIsRecord(false);
-      console.log('stoppred');
+      console.log('stopped');
     } catch (e) {
       console.error(e);
     }
@@ -80,7 +142,7 @@ export const MathPlay = () => {
   };
   const _onSpeechResults = event => {
     const userSpoken = event.value[0];
-    console.log(userSpoken);
+    //console.log(event);
     // setUserAnswer(prevAnswer => {
     //   if (prevAnswer == userSpoken) {
     //     destroyRecognizing();
@@ -90,6 +152,7 @@ export const MathPlay = () => {
     //   return userSpoken;
     // });
     setUserAnswer(userSpoken);
+    console.log('인삭 결과 : ', userSpoken);
 
     // setTimeout(() => {
     //   setUserAnswer(prevAnswer => {
@@ -105,56 +168,35 @@ export const MathPlay = () => {
     //   });
     // }, 700);
   };
-  useEffect(() => {
-    const prev = userAnswer;
-    setTimeout(() => {
-      if (prev == userAnswer) {
-        setUserAnswer('');
-        console.log('done');
-      }
-    }, 2000);
-  }, [userAnswer]);
-  const _onSpeechError = () => {};
-  const _onSpeechRecognized = () => {};
-
-  const recordVoice = () => {
-    RNVoice.start('ko-KR', {
-      RECOGNIZER_ENGINE: 'GOOGLE',
-      EXTRA_PARTIAL_RESULTS: true,
-    });
+  const _onSpeechError = e => {
+    //console.log('onSpeechError: ', e);
   };
-  useEffect(() => {
-    console.log('quiz list changed');
-    if (quizList.length > 0) {
-      RNVoice.onSpeechResults = _onSpeechResults;
+
+  const _onSpeechRecognized = e => {
+    //console.log('onSpeechRecognized: ', e);
+  };
+
+  const _onSpeechPartialResults = e => {
+    // console.log('onSpeechPartialResults: ', e);
+  };
+
+  const recordVoice = async () => {
+    console.log('인식 시작');
+    try {
+      await RNVoice.start('ko-KR', {
+        RECOGNIZER_ENGINE: 'GOOGLE',
+        EXTRA_PARTIAL_RESULTS: true,
+      });
+    } catch (e) {
+      console.error(e);
     }
-  }, [quizList, quizIndex]);
-
-  useEffect(() => {
-    RNVoice.onSpeechStart = _onSpeechStart;
-    RNVoice.onSpeechEnd = _onSpeechEnd;
-    RNVoice.onSpeechError = _onSpeechError;
-    RNVoice.onSpeechRecognized = _onSpeechRecognized;
-    // RNVoice.onSpeechResults = _onSpeechResults;
-
-    // RNVoice.onSpeechPartialResults = _onSpeechPartialResults;
-
-    Tts.addEventListener('tts-finish', () => {
-      setTimeout(() => {
-        setIsRecord(true);
-        recordVoice();
-      }, 300);
-    });
-
-    return () => {
-      Tts.removeEventListener('tts-finish');
-      RNVoice.destroy().then(RNVoice.removeAllListeners);
-    };
-  }, []);
+  };
 
   return (
     <SafeAreaView style={styled.container}>
       <View style={styled.quizTextContainer}>
+        {/* 카운트, 인식결과 출력 */}
+        {!finish ? <Text>{count}</Text> : <Text>결과 : {userAnswer}</Text>}
         <Text style={styled.quizText}>{isRecord ? userAnswer : quizList.length > 0 && quizList[quizIndex].quiz}</Text>
       </View>
       <View style={styled.micContainer}>{<MicroPhone isTalking={isRecord} onPress={onPressMic} />}</View>

@@ -35,7 +35,7 @@ export const MathInit = () => {
   );
 };
 
-styled = StyleSheet.create({
+const styled = StyleSheet.create({
   container: {
     flex: 1,
   },
