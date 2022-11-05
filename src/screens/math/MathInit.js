@@ -15,8 +15,8 @@ export const MathInit = () => {
     });
   }, []);
   useEffect(() => {
-    Tts.speak('사칙연산 게임을 시작합니다', {
-      rate: 0.5,
+    Tts.speak('속담 이어 말하기를 시작합니다', {
+      rate: 0.4,
       androidParams: {
         KEY_PARAM_PAN: -1,
         KEY_PARAM_VOLUME: 1,
@@ -24,13 +24,13 @@ export const MathInit = () => {
       },
     });
 
-    // return () => {
-    //   Tts.removeEventListener('tts-finish');
-    // };
+    return () => {
+      Tts.removeEventListener('tts-finish');
+    };
   }, []);
   return (
     <SafeAreaView style={styled.container}>
-      <InitText game="사칙연산 게임" style={{marginLeft: 32, marginTop: 200}} />
+      <InitText game="속담 이어 말하기를" style={{marginLeft: 32, marginTop: 200}} />
     </SafeAreaView>
   );
 };

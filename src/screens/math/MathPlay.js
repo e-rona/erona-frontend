@@ -1,139 +1,27 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {SafeAreaView, View, Text, StyleSheet} from 'react-native';
+import {useQuery} from '@tanstack/react-query';
 import Tts from 'react-native-tts';
 import RNVoice from '@react-native-voice/voice';
-import {useNavigation} from '@react-navigation/native';
-import Sound from 'react-native-sound';
 
 import {MicroPhone} from '../../components';
-import {speechToNumber, useSyncState} from '../../utils';
-
-const operators = ['+', '-', '*', '/'];
-const operatorsKorean = ['더하기', '빼기', '곱하기', '나누기'];
-
-const TTS_ANDROID_PARAMS = {
-  rate: 0.4,
-  androidParams: {
-    KEY_PARAM_PAN: -1,
-    KEY_PARAM_VOLUME: 1,
-    KEY_PARAM_STREAM: 'STREAM_NOTIFICATION',
-  },
-};
-
-const quizzes = [
-  {
-    num1: '3',
-    num2: '5',
-    answer: 8,
-  },
-  {
-    num1: '7',
-    num2: '2',
-    answer: 5,
-  },
-  {
-    num1: '3',
-    num2: '1',
-    answer: 4,
-  },
-];
-
-const audio = [
-  {
-    title: 'alarm',
-    isRequire: true,
-    url: require('../../assets/alarm_short.mp3'),
-  },
-];
+import {getGame, queryKeys} from '../../api';
+import {useSyncState} from '../../utils';
 
 export const MathPlay = () => {
-  const navigation = useNavigation();
+  const [isRecord, setIsRecord] = useState(false); // 마이크 켜져 있는지
+  const [quizList, setQuizList] = useState([]); // 퀴즈 목록
+  const [quizIndex, setQuizIndex] = useState(0); // 현재 퀴즈 인덱스
+  const [userAnswer, setUserAnswer] = useState('');
 
-  const [quizIndex, setQuizIndex] = useState(0);
-  const [isRecord, setIsRecord] = useState(false);
-  const [userAnswer, setUserAnswer] = useState(-1);
-  const [rightAnswer, setRightAnswer] = useState(0);
-  const [isAnswered, setIsAnswered] = useState(false);
-
-  let sound;
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      console.log('set time out');
-      if (isAnswered == false) {
-        setIsRecord(false);
-        playAlarm();
-      }
-
-      navigation.navigate('CurrentPosition');
-    }, 10000);
-
-    return () => clearTimeout(timeout);
-  }, [isAnswered]);
-
-  const _onSpeechStart = useCallback(() => {}, []);
-
-  const _onSpeechEnd = useCallback(e => {
-    //console.log('on speech end :', e);
-  }, []);
-
-  const _onSpeechResults = useCallback(
-    e => {
-      //console.log(partialResult);
-      const splitted = e.value[0].split(' ');
-      const lastword = splitted[splitted.length - 1];
-      console.log(lastword);
-
-      const userSpoken = speechToNumber(lastword);
-
-      console.log('lastword  :', lastword);
-      console.log('userspoken : ', userSpoken);
-
-      setUserAnswer(userSpoken);
-
-      // 0.5초마다 이전 숫자랑 현재 숫자 비교
-      setTimeout(() => {
-        setUserAnswer(userAnswer => {
-          // 말이 끝났으면
-          if (userAnswer === userSpoken) {
-            console.log('Processed transcript (iOS): ', userSpoken);
-            // Reset the transcript
-            setIsRecord(false);
-            setIsAnswered(true);
-            testAnswer(userAnswer);
-            RNVoice.destroy();
-
-            return '';
-          }
-          return userAnswer;
-        });
-      }, 500);
+  useQuery(queryKeys.game, getGame, {
+    onSuccess: data => {
+      setQuizList(data.gameList);
+      readQuiz(data.gameList[0].quiz);
     },
-    [testAnswer],
-  );
+  });
 
-  const _onSpeechError = useCallback(e => {}, []);
-
-  const _onSpeechRecognized = useCallback(event => {}, []);
-  const recordVoice = useCallback(() => {
-    RNVoice.start('ko-KR');
-  }, []);
-
-  const testAnswer = useCallback(
-    userAnswer => {
-      console.log('userAnswer : ', userAnswer);
-      if (quizzes[0].answer == userAnswer) {
-        navigation.navigate('Success');
-        setRightAnswer(rightAnswer => rightAnswer + 1);
-      } else {
-        console.log('틀렸습니다');
-        navigation.navigate('CurrentPosition');
-      }
-    },
-    [navigation],
-  );
-
-  const onPressMic = useCallback(() => {
+  const onPressMic = () => {
     if (isRecord) {
       setIsRecord(false);
       RNVoice.stop();
@@ -141,74 +29,87 @@ export const MathPlay = () => {
       setIsRecord(true);
       recordVoice();
     }
-  }, [isRecord, recordVoice]);
-
-  const playAlarm = useCallback(() => {
-    console.log('called');
-    sound = new Sound('alarm_short.mp3', Sound.MAIN_BUNDLE, err => {
-      if (err) {
-        console.log('err occured');
-        console.log(err);
-        return;
-      }
-      sound.play(success => {
-        if (success) {
-          sound.release();
-        } else {
-          console.log('playback failed due to audio decoding errors');
-        }
-      });
+  };
+  const readQuiz = quiz => {
+    Tts.speak(quiz, {
+      rate: 0.38,
     });
-  }, []);
+  };
+
+  const testAnswer = (userAnswer, quizList, quizIndex) => {
+    if (userAnswer == quizList[quizIndex].answer) {
+      console.log('맞았습니다');
+      readQuiz(quizList[quizIndex + 1].quiz);
+      setQuizIndex(quizIndex => quizIndex + 1);
+    } else {
+      console.log('틀렸습니다');
+    }
+  };
+
+  const _onSpeechStart = () => {
+    console.log('onSpeechStart');
+  };
+  const _onSpeechEnd = () => {
+    console.log('onSpeechEnd');
+    setIsRecord(false);
+  };
+  const _onSpeechResults = event => {
+    const userSpoken = event.value[0];
+    console.log(userSpoken);
+    setUserAnswer(userSpoken);
+
+    setTimeout(() => {
+      setUserAnswer(userAnswer => {
+        console.log('userAnswer : ', userAnswer);
+        console.log('userSpoken : ', userSpoken);
+        if (userAnswer == userSpoken) {
+          console.log('Processed transcript (iOS): ', userSpoken);
+          setIsRecord(false);
+
+          testAnswer(userAnswer, quizList, quizIndex);
+          RNVoice.destroy().then(recordVoice);
+          return '';
+        }
+
+        return userAnswer;
+      });
+    }, 500);
+  };
+
+  const _onSpeechError = () => {};
+  const _onSpeechRecognized = () => {};
+
+  const recordVoice = () => {
+    RNVoice.start('ko-KR', {
+      RECOGNIZER_ENGINE: 'GOOGLE',
+      EXTRA_PARTIAL_RESULTS: true,
+    });
+  };
 
   useEffect(() => {
-    // bind handlers to react-native-voice
     RNVoice.onSpeechStart = _onSpeechStart;
     RNVoice.onSpeechEnd = _onSpeechEnd;
-    RNVoice.onSpeechResults = _onSpeechResults;
     RNVoice.onSpeechError = _onSpeechError;
     RNVoice.onSpeechRecognized = _onSpeechRecognized;
+    RNVoice.onSpeechResults = _onSpeechResults;
 
-    // Tts.addEventListener('tts-start', event => {
-    //   console.log('herererererererer');
-    //   setTimeout(() => {
-    //     if (isAnswered == false) {
-    //       setIsRecord(false);
-    //       playAlarm();
-    //     }
-    //   }, 5000);
-    // });
-    const listener = Tts.addEventListener('tts-finish', event => {
-      console.log('tts-done');
-      // set record on when quiz notification is done
+    // RNVoice.onSpeechPartialResults = _onSpeechPartialResults;
+
+    Tts.addEventListener('tts-finish', () => {
       setIsRecord(true);
       recordVoice();
     });
 
-    Sound.setCategory('Playback', true);
-
-    // remove listers when component is unmounted
     return () => {
+      Tts.removeEventListener('tts-finish');
       RNVoice.destroy().then(RNVoice.removeAllListeners);
-      if (sound) {
-        sound.release();
-      }
-      listener.remove();
     };
   }, []);
-
-  // const readQuiz = useCallback(quizIndex => {
-  //   Tts.speak(quizzes[quizIndex].num1 + '더하기' + quizzes[quizIndex].num2 + '는?');
-  // }, []);
-  useEffect(() => {
-    const toTalk = quizzes[quizIndex].num1 + '더하기' + quizzes[quizIndex].num2 + '는?';
-    Tts.speak(toTalk, TTS_ANDROID_PARAMS);
-  }, [quizIndex]);
 
   return (
     <SafeAreaView style={styled.container}>
       <View style={styled.quizTextContainer}>
-        <Text style={styled.quizText}></Text>
+        <Text style={styled.quizText}>{isRecord ? userAnswer : quizList.length > 0 && quizList[quizIndex].quiz}</Text>
       </View>
       <View style={styled.micContainer}>{<MicroPhone isTalking={isRecord} onPress={onPressMic} />}</View>
     </SafeAreaView>
@@ -226,7 +127,7 @@ const styled = StyleSheet.create({
   },
   quizText: {
     fontFamily: 'Pretendard-SemiBold',
-    fontSize: 96,
+    fontSize: 72,
     marginRight: 12,
   },
   micContainer: {

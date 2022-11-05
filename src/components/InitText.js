@@ -4,7 +4,7 @@ import {View, Text, StyleSheet} from 'react-native';
 export const InitText = ({game, style}) => {
   return (
     <View style={style}>
-      <Text style={styled.text}>{game}을</Text>
+      <Text style={styled.text}>{game}</Text>
       <Text style={styled.text}>시작합니다</Text>
     </View>
   );

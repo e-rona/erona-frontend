@@ -7,7 +7,7 @@ import {setCustomText} from 'react-native-global-props';
 import Tts from 'react-native-tts';
 import {RootStackNavigator} from './src/navigations/RootStackNavigator';
 import {LogBox} from 'react-native';
-
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -19,6 +19,7 @@ const customTextProps = {
     color: gray900,
   },
 };
+const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
@@ -49,11 +50,13 @@ const App = () => {
   }, []);
 
   return (
-    <SafeAreaProvider style={{flex: 1, backgroundColor: 'white'}}>
-      <NavigationContainer>
-        <RootStackNavigator />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider style={{flex: 1, backgroundColor: 'white'}}>
+        <NavigationContainer>
+          <RootStackNavigator />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
 };
 
