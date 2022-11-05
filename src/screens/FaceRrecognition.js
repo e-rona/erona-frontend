@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 
 const landmarkSize = 2;
@@ -27,6 +27,7 @@ export default class FaceRecognition extends Component {
     blinkDetected: false,
     blinkedimage: null,
     sleepCount: 0,
+    detectCount: 0,
     alert: false,
   };
 
@@ -80,9 +81,16 @@ export default class FaceRecognition extends Component {
 
   facesDetected = ({faces}) => {
     if (!faces.length) {
-      console.log('얼굴 감지 불가');
+      //실제 주행 중 운전자의 얼굴을 찾을 수 없는 경우, "운전자의 얼굴을 찾을 수 없습니다" "운전자의 눈을 찾을 수 없습니다" 라고 팝업 제시
+      this.setState({detectCount: this.state.detectCount + 1});
 
+      if (this.state.detectCount > 10) {
+        this.setState({detectCount: 0});
+        Alert.alert('얼굴 인식 불가', '얼굴 인식이 불가합니다. 각도를 조절해주세요.', [{text: '확인', onPress: () => console.log('OK Pressed')}]);
+      }
       return;
+    } else {
+      this.setState({detectCount: 0});
     }
     // console.log('face : ', faces[0].rollAngle, faces[0].yawAngle);
     const rightEye = faces[0].rightEyeOpenProbability;
@@ -104,7 +112,7 @@ export default class FaceRecognition extends Component {
       console.log('조는중');
       this.setState({sleepCount: this.state.sleepCount + 1});
       if (this.state.sleepCount > 8) {
-        this.setState({alert: true, sleepCount: 0});
+        this.setState({sleepCount: 0});
         this.props.navigation.navigate('MathStackNavigator');
       }
       console.log(
@@ -120,7 +128,7 @@ export default class FaceRecognition extends Component {
       console.log('자는중');
       this.setState({sleepCount: this.state.sleepCount + 1});
       if (this.state.sleepCount > 8) {
-        this.setState({alert: true, sleepCount: 0});
+        this.setState({sleepCount: 0});
         this.props.navigation.navigate('MathStackNavigator');
       }
     } else {
