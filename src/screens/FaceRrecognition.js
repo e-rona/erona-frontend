@@ -1,147 +1,76 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert} from 'react-native';
 import {RNCamera} from 'react-native-camera';
+import {useNavigation} from '@react-navigation/native';
 
 const landmarkSize = 2;
 
-export default class FaceRecognition extends Component {
-  state = {
-    flash: 'off',
-    zoom: 0,
-    autoFocus: 'on',
-    autoFocusPoint: {
-      normalized: {x: 0.5, y: 0.5}, // normalized values required for autoFocusPointOfInterest
-      drawRectPosition: {
-        x: Dimensions.get('window').width * 0.5 - 32,
-        y: Dimensions.get('window').height * 0.5 - 32,
-      },
+const FaceRecognition = () => {
+  const navigation = useNavigation();
+  const zoom = 0;
+  const autoFocus = 'on';
+  const ratio = '16:9';
+  const [autoFocusPoint, setAutoFocusPoint] = useState({
+    normalized: {x: 0.5, y: 0.5},
+    drawRectPosition: {
+      x: Dimensions.get('window').width * 0.5 - 32,
+      y: Dimensions.get('window').height * 0.5 - 32,
     },
-    depth: 0,
-    type: 'front', // Camera Front or Back
-    whiteBalance: 'auto',
-    ratio: '16:9',
-    canDetectFaces: false,
-    canDetectText: false,
-    canDetectBarcode: false,
-    faces: [],
-    blinkDetected: false,
-    blinkedimage: null,
-    sleepCount: 0,
-    detectCount: 0,
-    alert: false,
-  };
+  });
+  const [type, setType] = useState('front');
+  const [detectFaces, setDetectFaces] = useState(false);
+  const [face, setFace] = useState([]);
+  const [sleepCount, setSleepCount] = useState(0);
+  const [detectCount, setDetectCount] = useState(0);
+  const [alert, setAlert] = useState(false);
+  const [executeTime, setExcuteTime] = useState(0);
+  const [closeTime, setCloseTime] = useState(0);
 
-  toggleFacing() {
-    this.setState({
-      type: this.state.type === 'back' ? 'front' : 'back',
-    });
-  }
-
-  touchToFocus(event) {
-    const {pageX, pageY} = event.nativeEvent;
-    const screenWidth = Dimensions.get('window').width;
-    const screenHeight = Dimensions.get('window').height;
-    const isPortrait = screenHeight > screenWidth;
-
-    let x = pageX / screenWidth;
-    let y = pageY / screenHeight;
-    // Coordinate transform for portrait. See autoFocusPointOfInterest in docs for more info
-    if (isPortrait) {
-      x = pageY / screenHeight;
-      y = -(pageX / screenWidth) + 1;
-    }
-
-    this.setState({
-      autoFocusPoint: {
-        normalized: {x, y},
-        drawRectPosition: {x: pageX, y: pageY},
-      },
-    });
-  }
-
-  setFocusDepth(depth) {
-    this.setState({
-      depth,
-    });
-  }
-
-  handleBlinkDetection = async function () {
-    if (this.camera) {
-      // const data = await this.camera.takePictureAsync();
-      // console.warn('takePicture ', data);
-      // this.setState({blinkedimage: data.path});
-      console.log('blink detected');
-    }
-  };
-
-  toggle = value => () => {
-    this.setState(prevState => ({[value]: !prevState[value]}));
-    console.log(value, this.state[`${value}`]);
-  };
-
-  facesDetected = ({faces}) => {
+  const facesDetected = ({faces}) => {
     if (!faces.length) {
       //실제 주행 중 운전자의 얼굴을 찾을 수 없는 경우, "운전자의 얼굴을 찾을 수 없습니다" "운전자의 눈을 찾을 수 없습니다" 라고 팝업 제시
-      this.setState({detectCount: this.state.detectCount + 1});
+      console.log('얼굴 인식 불가');
+      setDetectCount(detectCount + 1);
 
-      if (this.state.detectCount > 10) {
-        this.setState({detectCount: 0});
-        Alert.alert('얼굴 인식 불가', '얼굴 인식이 불가합니다. 각도를 조절해주세요.', [{text: '확인', onPress: () => console.log('OK Pressed')}]);
+      if (detectCount > 10) {
+        setDetectCount(0);
+        Alert.alert('얼굴 인식 불가', '운전자의 얼굴을 찾을 수 없습니다. 각도를 조절해주세요.', [{text: '확인', onPress: () => console.log('OK Pressed')}]);
       }
       return;
     } else {
-      this.setState({detectCount: 0});
+      setDetectCount(0);
     }
     // console.log('face : ', faces[0].rollAngle, faces[0].yawAngle);
     const rightEye = faces[0].rightEyeOpenProbability;
     const leftEye = faces[0].leftEyeOpenProbability;
     const smileprob = faces[0].smilingProbability;
     const bothEyes = (rightEye + leftEye) / 2;
-    // console.log(
-    //   JSON.stringify({
-    //     rightEyeOpenProbability: rightEye,
-    //     leftEyeOpenProbability: leftEye,
-    //     smilingProbability: smileprob,
-    //     blinkProb: bothEyes,
-    //   }),
-    // );
 
     console.log(bothEyes);
     if (bothEyes < 0.5 && bothEyes >= 0.2) {
       //졸린상태
       console.log('조는중');
-      this.setState({sleepCount: this.state.sleepCount + 1});
-      if (this.state.sleepCount > 8) {
-        this.setState({sleepCount: 0});
-        this.props.navigation.navigate('MathStackNavigator');
+      setSleepCount(sleepCount + 1);
+      if (sleepCount > 8) {
+        setSleepCount(0);
+        navigation.navigate('MathStackNavigator');
       }
-      console.log(
-        JSON.stringify({
-          blinkDetected: 'blinkDetected',
-          rightEyeOpenProbability: rightEye,
-          leftEyeOpenProbability: leftEye,
-        }),
-      );
-      this.setState({blinkDetected: true});
     } else if (bothEyes < 0.2) {
       //잠든상태
       console.log('자는중');
-      this.setState({sleepCount: this.state.sleepCount + 1});
-      if (this.state.sleepCount > 8) {
-        this.setState({sleepCount: 0});
-        this.props.navigation.navigate('MathStackNavigator');
+      setSleepCount(sleepCount + 1);
+      if (sleepCount > 8) {
+        setSleepCount(0);
+        navigation.navigate('MathStackNavigator');
       }
     } else {
-      this.setState({sleepCount: 0});
+      setSleepCount(0);
     }
-    if (this.state.blinkDetected && bothEyes >= 0.9) {
-      this.handleBlinkDetection(faces);
-      this.setState({blinkDetected: false});
-    }
-    this.setState({faces});
+
+    setFace([...faces]);
   };
 
-  renderFace = ({bounds, faceID, rollAngle, yawAngle, leftEyeOpenProbability, rightEyeOpenProbability, smilingProbability}) => (
+  const renderFace = ({bounds, faceID, rollAngle, yawAngle, leftEyeOpenProbability, rightEyeOpenProbability, smilingProbability}) => (
     <View
       key={faceID}
       transform={[{perspective: 600}, {rotateZ: `${rollAngle.toFixed(0)}deg`}, {rotateY: `${yawAngle.toFixed(0)}deg`}]}
@@ -162,7 +91,7 @@ export default class FaceRecognition extends Component {
     </View>
   );
 
-  renderLandmarksOfFace(face) {
+  const renderLandmarksOfFace = face => {
     const renderLandmark = position =>
       position && (
         <View
@@ -190,26 +119,24 @@ export default class FaceRecognition extends Component {
         {renderLandmark(face.bottomMouthPosition)}
       </View>
     );
-  }
+  };
 
-  renderFaces = () => (
+  const renderFaces = () => (
     <View style={styles.facesContainer} pointerEvents="none">
-      {this.state.faces.map(this.renderFace)}
+      {face.map(renderFace)}
     </View>
   );
 
-  renderLandmarks = () => (
+  const renderLandmarks = () => (
     <View style={styles.facesContainer} pointerEvents="none">
-      {this.state.faces.map(this.renderLandmarksOfFace)}
+      {face.map(renderLandmarksOfFace)}
     </View>
   );
 
-  renderCamera() {
-    const {canDetectFaces} = this.state;
-
+  const renderCamera = () => {
     const drawFocusRingPosition = {
-      top: this.state.autoFocusPoint.drawRectPosition.y - 32,
-      left: this.state.autoFocusPoint.drawRectPosition.x - 32,
+      top: autoFocusPoint.drawRectPosition.y - 32,
+      left: autoFocusPoint.drawRectPosition.x - 32,
     };
     // handleFaceDetected = faceArray => {
     //   console.log('handleFaceDetected', faceArray);
@@ -224,9 +151,9 @@ export default class FaceRecognition extends Component {
           flex: 1,
           justifyContent: 'space-between',
         }}
-        type={this.state.type}
-        zoom={this.state.zoom}
-        ratio={this.state.ratio}
+        type={type}
+        zoom={zoom}
+        ratio={ratio}
         androidCameraPermissionOptions={{
           title: 'Permission to use camera',
           message: 'We need your permission to use your camera',
@@ -237,24 +164,22 @@ export default class FaceRecognition extends Component {
         faceDetectionClassifications={RNCamera.Constants.FaceDetection.Classifications.all ? RNCamera.Constants.FaceDetection.Classifications.all : undefined}
         onCameraReady={() => {
           console.log('onCameraReady');
-          this.setState({canDetectFaces: true});
+          setDetectFaces(true);
         }}
-        onFacesDetected={this.state.canDetectFaces ? this.facesDetected : null}
+        onFacesDetected={detectFaces ? facesDetected : null}
         onFaceDetectionError={error => console.log('FDError', error)} // This is never triggered
       />
     );
-  }
+  };
 
-  render() {
-    return this.state.alert ? (
-      <View style={{flex: 1}}>
-        <Text>졸음인지됨! 게임으로 넘어가기</Text>
-      </View>
-    ) : (
-      <View style={styles.container}>{this.renderCamera()}</View>
-    );
-  }
-}
+  return alert ? (
+    <View style={{flex: 1}}>
+      <Text>졸음인지됨! 게임으로 넘어가기</Text>
+    </View>
+  ) : (
+    <View style={styles.container}>{renderCamera()}</View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -341,3 +266,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
+
+export default FaceRecognition;
