@@ -15,7 +15,9 @@ export const Home = () => {
   }, [navigation]);
 
   const onPressSuccess = useCallback(() => {
-    navigation.navigate('Success');
+    navigation.navigate('Success', {
+      perfect: false,
+    });
   }, []);
 
   const onPressCurrentPosition = useCallback(() => {
