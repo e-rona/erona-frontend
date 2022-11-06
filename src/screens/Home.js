@@ -26,7 +26,7 @@ export const Home = () => {
   return (
     <View style={styled.rootContainer}>
       {/* <ButtonSmall
-        label="졸음 인식"
+      label="졸음 인식"
         onPress={onPressFaceRecognition}
         style={{marginBottom: 16}}
       />
