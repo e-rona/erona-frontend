@@ -12,6 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		264B37E12916BB2C00A27030 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 264B37E02916BB2C00A27030 /* SplashScreen.storyboard */; };
 		265BE6F128EFD3C3004BC9BF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265BE6F028EFD3C3004BC9BF /* File.swift */; };
 		7699B88040F8A987B510C191 /* libPods-erona-eronaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-erona-eronaTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -52,13 +53,13 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = erona/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = erona/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-erona-eronaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-erona-eronaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		264B37E02916BB2C00A27030 /* SplashScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		265BE6EF28EFD3C3004BC9BF /* erona-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "erona-Bridging-Header.h"; sourceTree = "<group>"; };
 		265BE6F028EFD3C3004BC9BF /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-erona.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-erona.debug.xcconfig"; path = "Target Support Files/Pods-erona/Pods-erona.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-erona.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-erona.release.xcconfig"; path = "Target Support Files/Pods-erona/Pods-erona.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-erona-eronaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-erona-eronaTests.debug.xcconfig"; path = "Target Support Files/Pods-erona-eronaTests/Pods-erona-eronaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-erona.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-erona.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = erona/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-erona-eronaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-erona-eronaTests.release.xcconfig"; path = "Target Support Files/Pods-erona-eronaTests/Pods-erona-eronaTests.release.xcconfig"; sourceTree = "<group>"; };
 		A353E93C2917775100CD1FEC /* sine.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = sine.mp3; path = ../src/assets/sine.mp3; sourceTree = "<group>"; };
 		A353E93D2917775200CD1FEC /* sawtooth.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = sawtooth.mp3; path = ../src/assets/sawtooth.mp3; sourceTree = "<group>"; };
@@ -121,7 +122,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				264B37E02916BB2C00A27030 /* SplashScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = erona;
@@ -300,10 +301,10 @@
 				A3AEF1BD28EC048F00E5D87A /* Pretendard-SemiBold.otf in Resources */,
 				A353E9432917775200CD1FEC /* square.mp3 in Resources */,
 				A3AEF1BE28EC048F00E5D87A /* Pretendard-Thin.otf in Resources */,
+				264B37E12916BB2C00A27030 /* SplashScreen.storyboard in Resources */,
 				A353E9412917775200CD1FEC /* sawtooth.mp3 in Resources */,
 				A3AEF1BF28EC048F00E5D87A /* Pretendard-Medium.otf in Resources */,
 				A3C5319C28EF413A009F3BAC /* alarm_short.mp3 in Resources */,
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

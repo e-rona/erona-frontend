@@ -8,6 +8,8 @@ import Tts from 'react-native-tts';
 import {RootStackNavigator} from './src/navigations/RootStackNavigator';
 import {LogBox} from 'react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import SplashScreen from 'react-native-splash-screen';
+
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -23,6 +25,13 @@ const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
+    try {
+      SplashScreen.hide();
+    } catch (e) {
+      console.warn('에러발생');
+      console.warn(e);
+    }
+
     // set default font
     setCustomText(customTextProps);
 
