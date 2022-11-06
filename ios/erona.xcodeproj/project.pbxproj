@@ -15,6 +15,10 @@
 		265BE6F128EFD3C3004BC9BF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265BE6F028EFD3C3004BC9BF /* File.swift */; };
 		7699B88040F8A987B510C191 /* libPods-erona-eronaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-erona-eronaTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A353E9402917775200CD1FEC /* sine.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A353E93C2917775100CD1FEC /* sine.mp3 */; };
+		A353E9412917775200CD1FEC /* sawtooth.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A353E93D2917775200CD1FEC /* sawtooth.mp3 */; };
+		A353E9422917775200CD1FEC /* triangle.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A353E93E2917775200CD1FEC /* triangle.mp3 */; };
+		A353E9432917775200CD1FEC /* square.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A353E93F2917775200CD1FEC /* square.mp3 */; };
 		A3AEF1B728EC048F00E5D87A /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = A3AEF1AE28EC048E00E5D87A /* Pretendard-Black.otf */; };
 		A3AEF1B828EC048F00E5D87A /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = A3AEF1AF28EC048F00E5D87A /* Pretendard-Bold.otf */; };
 		A3AEF1B928EC048F00E5D87A /* Pretendard-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = A3AEF1B028EC048F00E5D87A /* Pretendard-Light.otf */; };
@@ -56,6 +60,10 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-erona.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-erona.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = erona/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-erona-eronaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-erona-eronaTests.release.xcconfig"; path = "Target Support Files/Pods-erona-eronaTests/Pods-erona-eronaTests.release.xcconfig"; sourceTree = "<group>"; };
+		A353E93C2917775100CD1FEC /* sine.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = sine.mp3; path = ../src/assets/sine.mp3; sourceTree = "<group>"; };
+		A353E93D2917775200CD1FEC /* sawtooth.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = sawtooth.mp3; path = ../src/assets/sawtooth.mp3; sourceTree = "<group>"; };
+		A353E93E2917775200CD1FEC /* triangle.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = triangle.mp3; path = ../src/assets/triangle.mp3; sourceTree = "<group>"; };
+		A353E93F2917775200CD1FEC /* square.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = square.mp3; path = ../src/assets/square.mp3; sourceTree = "<group>"; };
 		A3AEF1AE28EC048E00E5D87A /* Pretendard-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Black.otf"; path = "Fonts/Pretendard-Black.otf"; sourceTree = "<group>"; };
 		A3AEF1AF28EC048F00E5D87A /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Bold.otf"; path = "Fonts/Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		A3AEF1B028EC048F00E5D87A /* Pretendard-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Pretendard-Light.otf"; path = "Fonts/Pretendard-Light.otf"; sourceTree = "<group>"; };
@@ -139,6 +147,10 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				A353E93D2917775200CD1FEC /* sawtooth.mp3 */,
+				A353E93C2917775100CD1FEC /* sine.mp3 */,
+				A353E93F2917775200CD1FEC /* square.mp3 */,
+				A353E93E2917775200CD1FEC /* triangle.mp3 */,
 				265BE6F028EFD3C3004BC9BF /* File.swift */,
 				A3C5319B28EF413A009F3BAC /* alarm_short.mp3 */,
 				A3AEF1AE28EC048E00E5D87A /* Pretendard-Black.otf */,
@@ -278,13 +290,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3AEF1B728EC048F00E5D87A /* Pretendard-Black.otf in Resources */,
+				A353E9422917775200CD1FEC /* triangle.mp3 in Resources */,
 				A3AEF1B828EC048F00E5D87A /* Pretendard-Bold.otf in Resources */,
 				A3AEF1B928EC048F00E5D87A /* Pretendard-Light.otf in Resources */,
+				A353E9402917775200CD1FEC /* sine.mp3 in Resources */,
 				A3AEF1BA28EC048F00E5D87A /* Pretendard-ExtraLight.otf in Resources */,
 				A3AEF1BB28EC048F00E5D87A /* Pretendard-ExtraBold.otf in Resources */,
 				A3AEF1BC28EC048F00E5D87A /* Pretendard-Regular.otf in Resources */,
 				A3AEF1BD28EC048F00E5D87A /* Pretendard-SemiBold.otf in Resources */,
+				A353E9432917775200CD1FEC /* square.mp3 in Resources */,
 				A3AEF1BE28EC048F00E5D87A /* Pretendard-Thin.otf in Resources */,
+				A353E9412917775200CD1FEC /* sawtooth.mp3 in Resources */,
 				A3AEF1BF28EC048F00E5D87A /* Pretendard-Medium.otf in Resources */,
 				A3C5319C28EF413A009F3BAC /* alarm_short.mp3 in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,

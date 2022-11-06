@@ -4,6 +4,7 @@ import {useQuery} from '@tanstack/react-query';
 import Tts from 'react-native-tts';
 import RNVoice from '@react-native-voice/voice';
 import {useNavigation} from '@react-navigation/native';
+import Sound from 'react-native-sound';
 
 import {MicroPhone} from '../../components';
 import {getGame, queryKeys} from '../../api';
@@ -21,19 +22,37 @@ export const MathPlay = () => {
   const [finish, setFinish] = useState(''); //인식 끝
   const [answerNum, setAnswerNum] = useState(0);
   const navigation = useNavigation();
+  let sound;
 
   useQuery(queryKeys.game, getGame, {
     onSuccess: data => {
-      // setQuizList([
-      //   {quiz: '어쩌구', answer: '저쩌고'},
-      //   {quiz: '어쩌구', answer: '저쩌고'},
-      //   {quiz: '어쩌구', answer: '저쩌고'},
-      // ]);
-      // readQuiz('어쩌고');
-      setQuizList(data.gameList.slice(0, 3));
-      readQuiz(data.gameList[0].quiz);
+      setQuizList([
+        {quiz: '어쩌구', answer: '저쩌고'},
+        {quiz: '어쩌구', answer: '저쩌고'},
+        {quiz: '어쩌구', answer: '저쩌고'},
+      ]);
+      readQuiz('어쩌고');
+      // setQuizList(data.gameList.slice(0, 3));
+      // readQuiz(data.gameList[0].quiz);
     },
   });
+
+  const playAlarm = useCallback(() => {
+    sound = new Sound('sine.mp3', Sound.MAIN_BUNDLE, err => {
+      if (err) {
+        console.log('err occured');
+        console.log(err);
+        return;
+      }
+      sound.play(success => {
+        if (success) {
+          sound.release();
+        } else {
+          console.log('playback failed due to audio decoding errors');
+        }
+      });
+    });
+  }, []);
 
   useEffect(() => {
     RNVoice.onSpeechStart = _onSpeechStart;
@@ -52,7 +71,12 @@ export const MathPlay = () => {
       }, 300);
     });
 
+    Sound.setCategory('Playback', true);
+
     return () => {
+      if (sound) {
+        sound.release();
+      }
       Tts.removeEventListener('tts-finish');
       RNVoice.destroy().then(RNVoice.removeAllListeners);
     };
@@ -93,24 +117,40 @@ export const MathPlay = () => {
     const trimmedUserAnswer = userAnswer.replace(' ', '');
     const trimmedQuizAnswer = quizList[quizIndex].answer.replace(' ', '');
 
+    const prevAnswerNum = answerNum;
+    let curAnswer = false;
     if (trimmedUserAnswer == trimmedQuizAnswer) {
       console.log('맞았습니다');
-
-      setAnswerNum(answerNum => {
-        if (answerNum == 2) {
-          console.log('전부 정답');
-          navigation.navigate('Success');
-        }
-        return answerNum + 1;
-      });
-    } else {
-      console.log('틀렸습니다');
+      setAnswerNum(answerNum => answerNum + 1);
+      curAnswer = true;
     }
 
-    // 문제 다 읽음
-    if (quizIndex == quizList?.length - 1) {
-      console.log('일부만 정답');
-    } else {
+    const curAnswerNum = curAnswer == true ? prevAnswerNum + 1 : prevAnswerNum;
+    // 연속해서 두 개 틀린 경우
+    if (quizIndex == 1 && curAnswerNum == 0) {
+      playAlarm();
+      navigation.navigate('CurrentPosition');
+      return;
+    }
+    if (quizIndex == 2) {
+      if (curAnswerNum == 3) {
+        navigation.navigate('Success', {
+          perfect: true,
+        });
+        return;
+      }
+      if (curAnswerNum == 2) {
+        navigation.navigate('Success', {
+          perfect: false,
+        });
+        return;
+      } else {
+        playAlarm();
+        navigation.navigate('CurrentPosition');
+        return;
+      }
+    }
+    if (quizIndex < 2) {
       readQuiz(quizList[quizIndex + 1].quiz);
       setQuizIndex(quizIndex => quizIndex + 1);
       setIsRecord(false);
