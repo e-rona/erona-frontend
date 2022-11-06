@@ -35,11 +35,7 @@ export const Success = () => {
         <Text style={styeld.h1}>졸음 미션 달성 🎉</Text>
         {/* <Text style={styeld.h2}>{seconds}초 후 어플을 종료합니다</Text> */}
       </View>
-      <ButtonLarge
-        label="메인으로 이동"
-        style={{marginBottom: isNotch ? 24 : 48}}
-        onPress={onPressGoMain}
-      />
+      <ButtonLarge label="메인으로 이동" style={{marginBottom: isNotch ? 24 : 48}} onPress={onPressGoMain} />
     </SafeAreaView>
   );
 };

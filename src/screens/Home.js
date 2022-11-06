@@ -35,7 +35,7 @@ export const Home = () => {
       />
       <ButtonSmall label="성공 화면" onPress={onPressSuccess} /> */}
       <ButtonRound label="시작" onPress={onPressFaceRecognition} />
-      <ButtonRound label="현재위치" onPress={onPressCurrentPosition} />
+      {/* <ButtonRound label="현재위치" onPress={onPressCurrentPosition} /> */}
     </View>
   );
 };
