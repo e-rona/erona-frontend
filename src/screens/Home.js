@@ -20,8 +20,8 @@ export const Home = () => {
     });
   }, []);
 
-  const onPressKakaoMap = useCallback(() => {
-    navigation.navigate('KakaoMap');
+  const onPressCurrentPosition = useCallback(() => {
+    navigation.navigate('CurrentPosition');
   }, []);
   return (
     <View style={styled.rootContainer}>
@@ -37,7 +37,7 @@ export const Home = () => {
       />
       <ButtonSmall label="성공 화면" onPress={onPressSuccess} /> */}
       <ButtonRound label="시작" onPress={onPressFaceRecognition} />
-      {/* <ButtonRound label="카카오맵" onPress={onPressKakaoMap} /> */}
+      {/* <ButtonRound label="현재위치" onPress={onPressCurrentPosition} /> */}
     </View>
   );
 };
