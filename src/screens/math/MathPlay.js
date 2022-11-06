@@ -26,14 +26,14 @@ export const MathPlay = () => {
 
   useQuery(queryKeys.game, getGame, {
     onSuccess: data => {
-      setQuizList([
-        {quiz: '어쩌구', answer: '저쩌고'},
-        {quiz: '어쩌구', answer: '저쩌고'},
-        {quiz: '어쩌구', answer: '저쩌고'},
-      ]);
-      readQuiz('어쩌고');
-      // setQuizList(data.gameList.slice(0, 3));
-      // readQuiz(data.gameList[0].quiz);
+      // setQuizList([
+      //   {quiz: '어쩌구', answer: '저쩌고'},
+      //   {quiz: '어쩌구', answer: '저쩌고'},
+      //   {quiz: '어쩌구', answer: '저쩌고'},
+      // ]);
+      // readQuiz('어쩌고');
+      setQuizList(data.gameList.slice(0, 3));
+      readQuiz(data.gameList[0].quiz);
     },
   });
 

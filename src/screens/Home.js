@@ -36,7 +36,7 @@ export const Home = () => {
         style={{marginBottom: 16}}
       />
       <ButtonSmall label="성공 화면" onPress={onPressSuccess} /> */}
-      <ButtonRound label="시작" onPress={onPressSpeechRecognition} />
+      <ButtonRound label="시작" onPress={onPressFaceRecognition} />
       {/* <ButtonRound label="카카오맵" onPress={onPressKakaoMap} /> */}
     </View>
   );
