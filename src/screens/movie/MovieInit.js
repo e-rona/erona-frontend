@@ -5,17 +5,17 @@ import Tts from 'react-native-tts';
 
 import {InitText} from '../../components';
 
-export const MathInit = () => {
+export const MovieInit = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
     // 말이 끝나면 다음 화면으로 이동
     Tts.addEventListener('tts-finish', () => {
-      navigation.navigate('MathPlay');
+      navigation.navigate('MoviePlay');
     });
   }, []);
   useEffect(() => {
-    Tts.speak('속담 이어 말하기를 시작합니다', {
+    Tts.speak('영화 명대사 듣고 제목 맞추기를 시작합니다.', {
       rate: 0.4,
       androidParams: {
         KEY_PARAM_PAN: -1,
@@ -30,7 +30,7 @@ export const MathInit = () => {
   }, []);
   return (
     <SafeAreaView style={styled.container}>
-      <InitText game="속담 이어 말하기를" style={{marginLeft: 32, marginTop: 200}} />
+      <InitText game="영화 명대사 듣고 제목 맞추기를" style={{marginLeft: 32, marginTop: 200}} />
     </SafeAreaView>
   );
 };

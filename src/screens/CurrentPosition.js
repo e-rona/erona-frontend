@@ -5,7 +5,9 @@ import Geolocation from 'react-native-geolocation-service';
 import {ButtonLarge} from '../components/ButtonLarge';
 import {hasNotch} from 'react-native-device-info';
 import {useNavigation} from '@react-navigation/native';
-
+import axios from 'axios';
+import Tts from 'react-native-tts';
+import {KAKAO_APP_KEY} from '@env';
 import * as colors from '../themes/colors';
 
 export const CurrentPosition = () => {
@@ -14,9 +16,78 @@ export const CurrentPosition = () => {
   const [location, setLocation] = useState(undefined);
   const [rest, setRest] = useState();
   const [sleep, setSleep] = useState();
-  const [destination, setDestination] = useState();
+  const [mart, setMart] = useState();
+  const [destination, setDestination] = useState({
+    name: '',
+    type: '',
+    distance: 0,
+  });
+
+  const findRest = async () => {
+    try {
+      const {data, status} = await axios.get(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?y=${location.latitude}&x=${location.longitude}&radius=20000&query='휴게소'&sort=distance`,
+        {
+          headers: {Authorization: 'KakaoAK ' + KAKAO_APP_KEY},
+        },
+      );
+      if (status === 200) {
+        const restArea = data.documents.filter(item => item.category_name === '교통,수송 > 휴게소');
+        setRest(restArea[0]);
+      } else {
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  };
+
+  const findSleep = async () => {
+    try {
+      const {status, data} = await axios.get(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?y=${location.latitude}&x=${location.longitude}&radius=20000&query='졸음쉼터'&sort=distance`,
+        {
+          method: 'GET',
+          headers: {Authorization: 'KakaoAK ' + KAKAO_APP_KEY},
+        },
+      );
+      if (status === 200) {
+        const restArea = data.documents.filter(item => item.category_name === '교통,수송 > 휴게소 > 졸음쉼터');
+        setSleep(restArea[0]);
+      } else {
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  };
+
+  const findMart = async () => {
+    try {
+      const {status, data} = await axios.get(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?y=${location.latitude}&x=${location.longitude}&radius=3000&query='편의점'&sort=distance`,
+        {
+          method: 'GET',
+          headers: {Authorization: 'KakaoAK ' + KAKAO_APP_KEY},
+        },
+      );
+
+      if (status === 200) {
+        const martArea = data.documents.filter(item => item.category_group_name === '편의점');
+        setMart(martArea[0]);
+      } else {
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  };
 
   useEffect(() => {
+    Tts.setIgnoreSilentSwitch('ignore');
     if (Platform.OS === 'ios') {
       Geolocation.requestAuthorization('always');
     }
@@ -38,82 +109,67 @@ export const CurrentPosition = () => {
 
   useEffect(() => {
     if (!location) return;
-    const findRest = async () => {
-      try {
-        const response = await fetch(
-          `https://dapi.kakao.com/v2/local/search/keyword.json?y=${location.latitude}&x=${location.longitude}&radius=20000&query='휴게소'&sort=distance`,
-          {
-            method: 'GET',
-            headers: {Authorization: 'KakaoAK 57fb554e275e7864927c3a28297a522c'},
-          },
-        );
-        if (response.status === 200) {
-          const result = await response.json();
-          const restArea = result.documents.filter(item => {
-            if (item.category_name === '교통,수송 > 휴게소') {
-              return true;
-            }
-          });
-          // console.log('휴게소 : ', restArea);
-          setRest(restArea[0]);
-        } else {
-          return false;
-        }
-      } catch (e) {
-        console.log(e);
-        return false;
-      }
-    };
-
-    const findSleep = async () => {
-      try {
-        const response = await fetch(
-          `https://dapi.kakao.com/v2/local/search/keyword.json?y=${location.latitude}&x=${location.longitude}&radius=20000&query='졸음쉼터'&sort=distance`,
-          {
-            method: 'GET',
-            headers: {Authorization: 'KakaoAK 57fb554e275e7864927c3a28297a522c'},
-          },
-        );
-        if (response.status === 200) {
-          const result = await response.json();
-          const restArea = result.documents.filter(item => {
-            if (item.category_name === '교통,수송 > 휴게소 > 졸음쉼터') {
-              return true;
-            }
-          });
-          //console.log('졸음쉼터 : ', restArea);
-          setSleep(restArea[0]);
-        } else {
-          return false;
-        }
-      } catch (e) {
-        console.log(e);
-        return false;
-      }
-    };
 
     findRest();
     findSleep();
+    findMart();
   }, [location]);
 
-  useEffect(() => {
-    if (rest && sleep) {
-      console.log(rest, sleep);
-      if (parseInt(rest.distance) <= parseInt(sleep.distance)) {
-        setDestination(rest);
-      } else {
-        setDestination(sleep);
-      }
-    }
-  }, [rest, sleep]);
+  const readResult = sentence => {
+    Tts.speak(sentence, {
+      rate: 0.4,
+    });
+  };
 
-  const onPressGoMain = useCallback(() => {
+  useEffect(() => {
+    if (rest && sleep && mart) {
+      const {place_name: restName, distance: restDistance} = rest;
+      const {place_name: sleepName, distance: sleepDistance} = sleep;
+      const {place_name: martName, distance: martDistance} = mart;
+
+      let sentence = '';
+
+      // 휴게소와 졸음 쉼터 둘 다 너무 먼 경우
+      if (parseInt(restDistance) > 5000 && parseInt(sleepDistance) > 5000) {
+        setDestination({
+          name: martName,
+          type: '편의점이',
+          distance: martDistance,
+        });
+        distance = sentence = `전방 ${martDistance >= 1000 ? (martDistance / 1000).toFixed(1) + 'km' : martDistance + 'm'} 앞에 편의점이 있습니다.`;
+      } else {
+        // 휴게소가 더 가까운 경우
+        if (parseInt(restDistance) <= parseInt(sleepDistance)) {
+          setDestination({
+            name: restName,
+            type: '휴게소가',
+            distance: restDistance,
+          });
+
+          sentence = `전방 ${restDistance >= 1000 ? (restDistance / 1000).toFixed(1) + 'km' : restDistance + 'm'} 앞에 졸음쉼터가 있습니다.`;
+        }
+        // 졸음쉼터가 더 가까운 경우
+        else {
+          setDestination({
+            name: sleepName,
+            type: '졸음 쉼터가',
+            distance: sleepDistance,
+          });
+
+          sentence = `전방 ${sleepDistance >= 1000 ? (sleepDistance / 1000).toFixed(1) + 'km' : sleepDistance + 'm'} 앞에 휴게소가 있습니다.`;
+        }
+      }
+      readResult(sentence);
+    }
+  }, [rest, sleep, mart]);
+
+  const onPressGoMain = () => {
     navigation.navigate('Home');
-  }, [navigation]);
+  };
 
   return (
     <SafeAreaView style={styled.container}>
-      {!destination ? (
+      {destination.name == '' ? (
         <View style={styled.loaderContainer}>
           <ActivityIndicator />
         </View>
@@ -123,9 +179,9 @@ export const CurrentPosition = () => {
             <Text style={styled.h1}>
               전방 {destination.distance >= 1000 ? (destination.distance / 1000).toFixed(1) + 'km' : destination.distance + 'm'} 앞에
               {'\n'}
-              {destination.category_name === '교통,수송 > 휴게소' ? '휴게소' : '졸음쉼터'}가 있습니다.
+              {destination.type} 있습니다.
             </Text>
-            <Text style={{...styled.h3, marginTop: 24}}>조금 쉬었다 가는 건 어떨까요?☺️</Text>
+            <Text style={{...styled.h3, marginTop: 24}}>조금 쉬었다 가는 건 어떨까요? ☺️</Text>
             {/* <Text style={styled.h2}>{seconds}초 후 어플을 종료합니다</Text> */}
           </View>
           <ButtonLarge label="메인으로 이동" style={{marginBottom: isNotch ? 24 : 48}} onPress={onPressGoMain} />
