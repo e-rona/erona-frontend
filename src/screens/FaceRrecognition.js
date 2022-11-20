@@ -39,8 +39,8 @@ const FaceRecognition = () => {
     const elapsedSec = elapsedMSec / 1000;
     console.log(elapsedSec, closeTime);
     let perclos = (closeTime / elapsedSec) * 100;
-    if (elapsedSec >= 60 && perclos > 20) {
-      navigation.navigate('MathStackNavigator');
+    if (elapsedSec >= 3 && perclos > 20) {
+      navigation.navigate('MovieStackNavigator');
     }
   }, [closeTime, executeTime, navigation]);
 
@@ -80,7 +80,7 @@ const FaceRecognition = () => {
       }
       // if (sleepCount > 8) {
       //   setSleepCount(0);
-      //   navigation.navigate('MathStackNavigator');
+      //   navigation.navigate('MovieStackNavigator');
       // }
     } else if (bothEyes < 0.2) {
       //잠든상태
@@ -93,7 +93,7 @@ const FaceRecognition = () => {
       }
       // if (sleepCount > 8) {
       //   setSleepCount(0);
-      //   navigation.navigate('MathStackNavigator');
+      //   navigation.navigate('MovieStackNavigator');
       // }
     } else {
       setSleepDetect(false);

@@ -15,7 +15,6 @@
 		264B37E12916BB2C00A27030 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 264B37E02916BB2C00A27030 /* SplashScreen.storyboard */; };
 		265BE6F128EFD3C3004BC9BF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265BE6F028EFD3C3004BC9BF /* File.swift */; };
 		7699B88040F8A987B510C191 /* libPods-erona-eronaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-erona-eronaTests.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A353E9402917775200CD1FEC /* sine.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A353E93C2917775100CD1FEC /* sine.mp3 */; };
 		A353E9412917775200CD1FEC /* sawtooth.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A353E93D2917775200CD1FEC /* sawtooth.mp3 */; };
 		A353E9422917775200CD1FEC /* triangle.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A353E93E2917775200CD1FEC /* triangle.mp3 */; };
@@ -549,7 +548,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8TA73DTYBT;
+				DEVELOPMENT_TEAM = 69F5355JYF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = erona/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -577,7 +576,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8TA73DTYBT;
+				DEVELOPMENT_TEAM = 69F5355JYF;
 				INFOPLIST_FILE = erona/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

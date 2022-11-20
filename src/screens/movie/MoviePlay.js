@@ -10,9 +10,9 @@ import {MicroPhone} from '../../components';
 import {getGame, queryKeys} from '../../api';
 import * as colors from '../../themes';
 
-const QUIZ_TIMER = 3;
+const QUIZ_TIMER = 5;
 
-export const MathPlay = () => {
+export const MoviePlay = () => {
   const [isRecord, setIsRecord] = useState(false); // 마이크 켜져 있는지
   const [quizList, setQuizList] = useState([]); // 퀴즈 목록
   const [quizIndex, setQuizIndex] = useState(0); // 현재 퀴즈 인덱스

@@ -11,7 +11,7 @@ export const Home = () => {
   }, [navigation]);
 
   const onPressSpeechRecognition = useCallback(() => {
-    navigation.navigate('MathStackNavigator');
+    navigation.navigate('MovieStackNavigator');
   }, [navigation]);
 
   const onPressSuccess = useCallback(() => {
@@ -25,19 +25,7 @@ export const Home = () => {
   }, []);
   return (
     <View style={styled.rootContainer}>
-      {/* <ButtonSmall
-      label="졸음 인식"
-        onPress={onPressFaceRecognition}
-        style={{marginBottom: 16}}
-      />
-      <ButtonSmall
-        label="사칙 연산"
-        onPress={onPressSpeechRecognition}
-        style={{marginBottom: 16}}
-      />
-      <ButtonSmall label="성공 화면" onPress={onPressSuccess} /> */}
-      <ButtonRound label="시작" onPress={onPressFaceRecognition} />
-      {/* <ButtonRound label="현재위치" onPress={onPressCurrentPosition} /> */}
+      <ButtonRound label="시작" onPress={onPressCurrentPosition} />
     </View>
   );
 };
