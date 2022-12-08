@@ -27,7 +27,7 @@ export const Badge = () => {
         <Text style={styled.headerText}>뱃지</Text>
       </View>
       <View style={styled.sectionContainer}>
-        <BadgeButton label="🟡 주의 운전자" detail="졸음 3회 | 운전 23시간" />
+        <BadgeButton label="🟡 주의 운전자" detail="졸음 3회 | 누적 운전 23시간" />
       </View>
       <View style={styled.sectionContainer}>
         <Text style={styled.label}>뱃지 부여 기준</Text>
