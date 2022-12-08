@@ -1,10 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
+import * as colors from '../themes/colors';
 
-export const BadgeButton = ({label, onPress}) => {
+export const BadgeButton = ({label, onPress, detail}) => {
   return (
     <Pressable style={styled.container} onPress={onPress}>
       <Text style={styled.text}>{label}</Text>
+      {detail && <Text style={styled.detailText}>{detail}</Text>}
     </Pressable>
   );
 };
@@ -22,11 +24,16 @@ const styled = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     borderRadius: 16,
+    paddingVertical: 20,
   },
   text: {
     fontFamily: 'Pretendard-SemiBold',
     fontSize: 16,
     lineHeight: 24,
-    paddingVertical: 20,
+  },
+  detailText: {
+    marginTop: 8,
+    color: colors.gray400,
+    lineHeight: 20,
   },
 });
