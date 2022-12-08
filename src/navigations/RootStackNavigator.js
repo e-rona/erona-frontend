@@ -1,10 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Success} from '../screens';
-import {Home} from '../screens';
-import FaceRecognition from '../screens/FaceRrecognition';
+import {Success, Home, CurrentPosition, FaceRecognition, Badge} from '../screens';
 import {MovieStackNavigator} from './MovieStackNavigator';
-import {CurrentPosition} from '../screens/CurrentPosition';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +13,7 @@ export const RootStackNavigator = () => {
       <Stack.Screen name="MovieStackNavigator" component={MovieStackNavigator} />
       <Stack.Screen name="Success" component={Success} />
       <Stack.Screen name="CurrentPosition" component={CurrentPosition} />
+      <Stack.Screen name="Badge" component={Badge} />
     </Stack.Navigator>
   );
 };

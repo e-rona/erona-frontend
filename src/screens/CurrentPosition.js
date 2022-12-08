@@ -9,6 +9,7 @@ import axios from 'axios';
 import Tts from 'react-native-tts';
 import {KAKAO_APP_KEY} from '@env';
 import * as colors from '../themes/colors';
+import * as style from '../themes/styles';
 
 export const CurrentPosition = () => {
   const isNotch = hasNotch();
@@ -176,7 +177,7 @@ export const CurrentPosition = () => {
       ) : (
         <>
           <View style={styled.textContainer}>
-            <Text style={styled.h1}>
+            <Text style={style.h1}>
               전방 {destination.distance >= 1000 ? (destination.distance / 1000).toFixed(1) + 'km' : destination.distance + 'm'} 앞에
               {'\n'}
               {destination.type} 있습니다.
@@ -205,12 +206,7 @@ const styled = StyleSheet.create({
     marginLeft: 40,
     marginTop: 150,
   },
-  h1: {
-    fontFamily: 'Pretendard-Bold',
-    fontSize: 32,
-    lineHeight: 40,
-    marginBottom: 8,
-  },
+
   h2: {
     fontFamily: 'Pretendard-SemiBold',
     fontSize: 24,

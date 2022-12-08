@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const landmarkSize = 2;
 
-const FaceRecognition = () => {
+export const FaceRecognition = () => {
   const navigation = useNavigation();
   const zoom = 0;
   const autoFocus = 'on';

@@ -1,39 +1,39 @@
-import React, {useEffect, useCallback} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React from 'react';
+import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {ButtonSmall, ButtonRound} from '../components';
-import {CurrentPosition} from './CurrentPosition';
+import {hasNotch} from 'react-native-device-info';
+import {ButtonLarge, BadgeButton} from '../components';
+import * as style from '../themes/styles';
 
 export const Home = () => {
   const navigation = useNavigation();
-  const onPressFaceRecognition = useCallback(() => {
+  const isNotch = hasNotch();
+
+  const onPressStart = () => {
     navigation.navigate('FaceRecognition');
-  }, [navigation]);
+  };
 
-  const onPressSpeechRecognition = useCallback(() => {
-    navigation.navigate('MovieStackNavigator');
-  }, [navigation]);
+  const onPressBadgeButton = () => {
+    navigation.navigate('Badge');
+  };
 
-  const onPressSuccess = useCallback(() => {
-    navigation.navigate('Success', {
-      perfect: false,
-    });
-  }, []);
-
-  const onPressCurrentPosition = useCallback(() => {
-    navigation.navigate('CurrentPosition');
-  }, []);
   return (
-    <View style={styled.rootContainer}>
-      <ButtonRound label="시작" onPress={onPressCurrentPosition} />
-    </View>
+    <SafeAreaView style={styled.rootContainer}>
+      <View style={style.h1Container}>
+        <View style={{marginBottom: 32}}>
+          <Text style={style.h1}>진실님, 오늘도</Text>
+          <Text style={style.h1}>안전운전 하세요!</Text>
+        </View>
+        <BadgeButton label="🟡 주의 운전자" onPress={onPressBadgeButton} />
+      </View>
+      <ButtonLarge label="시작하기" style={{marginBottom: isNotch ? 24 : 48}} onPress={onPressStart} />
+    </SafeAreaView>
   );
 };
 
 const styled = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });
