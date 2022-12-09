@@ -1,20 +1,25 @@
 import React, {useEffect, useCallback, useRef, useState} from 'react';
-import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, Image, TouchableOpacity, TextInput} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {getProfile as getKakaoProfile, login} from '@react-native-seoul/kakao-login';
+import axios from 'axios';
 
 import * as colors from '../themes/colors';
-import kakaoLoginButton from '../assets/icons/kakaoLoginButton.png';
-import appleLoginButton from '../assets/icons/appleLoginButton.png';
-import googleLoginButton from '../assets/icons/googleLoginButton.png';
-import {TextInput} from 'react-native-gesture-handler';
 
-export const SignUp = () => {
+export const SignUp = ({navigation: {setOptions}, route: {params}}) => {
   const [name, setName] = useState('');
   const navigation = useNavigation();
 
-  const signUp = () => {
-    console.log(name);
+  const signUp = async () => {
+    console.log(name, params.userId);
+    try {
+      const {data} = await axios.post('http://43.201.76.241:8080/login/register', {
+        userId: params.userId,
+      });
+      console.log(data);
+      //home화면으로 이동
+    } catch (err) {
+      console.log('err:', err);
+    }
   };
 
   return (

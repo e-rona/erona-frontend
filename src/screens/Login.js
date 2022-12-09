@@ -20,7 +20,9 @@ export const Login = () => {
   const getProfile = async () => {
     const profile = await getKakaoProfile();
     console.log(profile.id);
-    navigation.navigate('SignUp');
+    navigation.navigate('SignUp', {
+      userId: profile.id,
+    });
   };
 
   return (
