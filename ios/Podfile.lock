@@ -448,6 +448,8 @@ PODS:
     - React-perflogger (= 0.68.2)
   - ReactNativeKakaoMaps (0.0.8):
     - React
+  - RNCAsyncStorage (1.17.11):
+    - React-Core
   - RNDeviceInfo (10.2.0):
     - React-Core
   - RNGestureHandler (2.7.0):
@@ -530,6 +532,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "ReactNativeKakaoMaps (from `../node_modules/@jiggag/react-native-kakao-maps`)"
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -647,6 +650,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeKakaoMaps:
     :path: "../node_modules/@jiggag/react-native-kakao-maps"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
@@ -728,6 +733,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: b960b687d2dfef0d3761fbb187e01812ebab8b23
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   ReactNativeKakaoMaps: e7e917999a613011b7d5d9cf9ea01e40fb9aaed1
+  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNDeviceInfo: 8b83e99e290deaf1bab71673cc636776ef647b6f
   RNGestureHandler: 7673697e7c0e9391adefae4faa087442bc04af33
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9

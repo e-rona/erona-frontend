@@ -2,6 +2,7 @@ import React, {useEffect, useCallback, useRef, useState} from 'react';
 import {View, StyleSheet, Text, Image, TouchableOpacity, TextInput} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as colors from '../themes/colors';
 
@@ -16,6 +17,10 @@ export const SignUp = ({navigation: {setOptions}, route: {params}}) => {
         userId: params.userId,
       });
       console.log(data);
+      await AsyncStorage.setItem('accessToken', data.accessToken);
+      await AsyncStorage.setItem('refreshToken', data.refreshToken);
+      console.log(await AsyncStorage.getItem('accessToken'));
+      console.log(await AsyncStorage.getItem('refreshToken'));
       //home화면으로 이동
     } catch (err) {
       console.log('err:', err);
