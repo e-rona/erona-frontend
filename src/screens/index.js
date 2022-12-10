@@ -4,3 +4,6 @@ export * from './SpeechRecognition';
 export * from './Succes';
 export * from './Badge';
 export * from './CurrentPosition';
+export * from './Login';
+export * from './SignUp';
+export * from './SplashScren';

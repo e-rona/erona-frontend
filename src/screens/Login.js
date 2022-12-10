@@ -1,7 +1,8 @@
-import React, {useEffect, useCallback} from 'react';
-import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
+import React, {useEffect} from 'react';
+import {SafeAreaView, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {getProfile as getKakaoProfile, login} from '@react-native-seoul/kakao-login';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as colors from '../themes/colors';
 import kakaoLoginButton from '../assets/icons/kakaoLoginButton.png';
@@ -26,14 +27,14 @@ export const Login = () => {
   };
 
   return (
-    <View style={styled.rootContainer}>
+    <SafeAreaView style={styled.rootContainer}>
       <Text style={styled.title}>ERONA</Text>
       <TouchableOpacity onPress={signInWithKakao}>
         <Image source={kakaoLoginButton} style={styled.button} />
       </TouchableOpacity>
       <Image source={appleLoginButton} style={styled.button} />
       <Image source={googleLoginButton} style={styled.button} />
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -13,7 +13,8 @@ const BadgeCriterion = ({desc, label}) => {
   );
 };
 
-export const Badge = () => {
+export const Badge = ({route: {params}}) => {
+  const {driveInfo} = params;
   const navigation = useNavigation();
   const onPressGoBack = () => {
     navigation.goBack();
@@ -27,7 +28,7 @@ export const Badge = () => {
         <Text style={styled.headerText}>뱃지</Text>
       </View>
       <View style={styled.sectionContainer}>
-        <BadgeButton label="🟡 주의 운전자" detail="졸음 3회 | 누적 운전 23시간" />
+        <BadgeButton label={driveInfo.badge} detail={`졸음 ${driveInfo.count}회 | 누적 운전 ${driveInfo.hh}시간 ${driveInfo.mm}분`} />
       </View>
       <View style={styled.sectionContainer}>
         <Text style={styled.label}>뱃지 부여 기준</Text>
