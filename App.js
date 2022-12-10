@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
-import React, {useEffect} from 'react';
-import {Platform} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {AppState, Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {setCustomText} from 'react-native-global-props';
@@ -24,6 +24,10 @@ const customTextProps = {
 const queryClient = new QueryClient();
 
 const App = () => {
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+  const [runningTime, setRunningTime] = useState(0);
+
   useEffect(() => {
     try {
       SplashScreen.hide();
@@ -31,12 +35,17 @@ const App = () => {
       console.warn('에러발생');
       console.warn(e);
     }
-
-    // set default font
     setCustomText(customTextProps);
 
-    // react-native-tts settings
-    // install tts engine if not installed
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        console.log('App has come to the foreground!');
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      console.log('AppState', appState.current);
+    });
     Tts.getInitStatus().then(
       () => {},
       err => {
@@ -46,17 +55,21 @@ const App = () => {
         }
       },
     );
-    // set default language
+
     Tts.setDefaultLanguage('ko-KR');
-
-    // set default voice
-    //rTts.setDefaultVoice('com.apple.ttsbundle.Yuna-compact');
-
-    // play audio even the silent switch is set
     Tts.setIgnoreSilentSwitch('ignore');
 
     Platform.OS == 'android' && Tts.setDefaultRate(0.4);
+
+    setInterval(() => {
+      appState == 'active' && setRunningTime(runningTime => runningTime + 1);
+    }, 1000);
+    return () => {
+      subscription.remove();
+    };
   }, []);
+
+  console.log('runningTime : ', runningTime);
 
   return (
     <QueryClientProvider client={queryClient}>

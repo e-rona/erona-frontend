@@ -37,6 +37,7 @@ export const MoviePlay = () => {
     },
   });
 
+  // 38 23 38 55
   const playAlarm = useCallback(() => {
     sound = new Sound('sine.mp3', Sound.MAIN_BUNDLE, err => {
       if (err) {
@@ -98,6 +99,7 @@ export const MoviePlay = () => {
     }
   }, [count, timer]);
 
+  console.time('Performance Time');
   const onPressMic = () => {
     if (isRecord) {
       setIsRecord(false);
@@ -213,6 +215,8 @@ export const MoviePlay = () => {
       console.error(e);
     }
   };
+
+  console.timeEnd('Performance Time');
 
   return (
     <SafeAreaView style={styled.container}>
