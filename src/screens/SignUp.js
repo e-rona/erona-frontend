@@ -19,8 +19,11 @@ export const SignUp = ({navigation: {setOptions}, route: {params}}) => {
       console.log(data);
       await AsyncStorage.setItem('accessToken', data.accessToken);
       await AsyncStorage.setItem('refreshToken', data.refreshToken);
+      await AsyncStorage.setItem('name', name);
       console.log(await AsyncStorage.getItem('accessToken'));
       console.log(await AsyncStorage.getItem('refreshToken'));
+      console.log(await AsyncStorage.getItem('name'));
+      navigation.navigate('Home');
       //home화면으로 이동
     } catch (err) {
       console.log('err:', err);

@@ -5,37 +5,51 @@ import Tts from 'react-native-tts';
 import RNVoice from '@react-native-voice/voice';
 import {useNavigation} from '@react-navigation/native';
 import Sound from 'react-native-sound';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {MicroPhone} from '../../components';
-import {getGame, queryKeys} from '../../api';
+//import {getGame, queryKeys} from '../../api';
 import * as colors from '../../themes';
 
 const QUIZ_TIMER = 5;
 
-export const MoviePlay = () => {
+export const MoviePlay = ({route: {params}}) => {
   const [isRecord, setIsRecord] = useState(false); // 마이크 켜져 있는지
-  const [quizList, setQuizList] = useState([]); // 퀴즈 목록
   const [quizIndex, setQuizIndex] = useState(0); // 현재 퀴즈 인덱스
   const [userAnswer, setUserAnswer] = useState('');
   const [timer, setTimer] = useState(); //타이머
   const [count, setCount] = useState(QUIZ_TIMER); //QUIZ_TIMER초 카운트
   const [finish, setFinish] = useState(''); //인식 끝
   const [answerNum, setAnswerNum] = useState(0);
+  const [token, setToken] = useState('');
   const navigation = useNavigation();
   let sound;
+  const {quizList} = params;
 
-  useQuery(queryKeys.game, getGame, {
-    onSuccess: data => {
-      // setQuizList([
-      //   {quiz: '어쩌구', answer: '저쩌고'},
-      //   {quiz: '어쩌구', answer: '저쩌고'},
-      //   {quiz: '어쩌구', answer: '저쩌고'},
-      // ]);
-      // readQuiz('어쩌고');
-      setQuizList(data.gameList.slice(0, 3));
-      readQuiz(data.gameList[0].quiz);
-    },
-  });
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem('accessToken');
+    setToken(token);
+  };
+  const postTime = async () => {
+    console.log('post time');
+    try {
+      const {data} = await axios.post(
+        'http://43.201.76.241:8080/api/command/time/register',
+        {
+          useTime: '0',
+          count: '1',
+        },
+        {
+          headers: {
+            accessToken: token,
+          },
+        },
+      );
+      console.log('succcess');
+      console.log(data);
+    } catch (err) {}
+  };
 
   // 38 23 38 55
   const playAlarm = useCallback(() => {
@@ -63,6 +77,8 @@ export const MoviePlay = () => {
     RNVoice.onSpeechResults = _onSpeechResults;
     RNVoice.onSpeechPartialResults = _onSpeechPartialResults;
 
+    getToken();
+
     Tts.addEventListener('tts-finish', () => {
       setTimeout(() => {
         setUserAnswer('');
@@ -73,6 +89,8 @@ export const MoviePlay = () => {
     });
 
     Sound.setCategory('Playback', true);
+
+    readQuiz(quizList[0].quiz);
 
     return () => {
       if (sound) {
@@ -99,7 +117,6 @@ export const MoviePlay = () => {
     }
   }, [count, timer]);
 
-  console.time('Performance Time');
   const onPressMic = () => {
     if (isRecord) {
       setIsRecord(false);
@@ -130,7 +147,8 @@ export const MoviePlay = () => {
     const curAnswerNum = curAnswer == true ? prevAnswerNum + 1 : prevAnswerNum;
     // 연속해서 두 개 틀린 경우
     if (quizIndex == 1 && curAnswerNum == 0) {
-      playAlarm();
+      //playAlarm();
+      postTime();
       navigation.navigate('CurrentPosition');
       return;
     }
@@ -148,6 +166,7 @@ export const MoviePlay = () => {
         return;
       } else {
         playAlarm();
+        postTime();
         navigation.navigate('CurrentPosition');
         return;
       }
@@ -215,8 +234,6 @@ export const MoviePlay = () => {
       console.error(e);
     }
   };
-
-  console.timeEnd('Performance Time');
 
   return (
     <SafeAreaView style={styled.container}>
